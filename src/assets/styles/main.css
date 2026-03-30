@@ -1,0 +1,16 @@
+#app {
+  height: 100vh;
+}
+
+/* PrimeVue 스크롤바 커스텀 (관리자 페이지 느낌) */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #ff6600; /* 스크롤바에도 한화 오렌지 포인트 */
+}

@@ -1,0 +1,275 @@
+/* 전체 레이아웃 그리드/플렉스 설정 */
+.admin-layout {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* 사이드바 고정 폭 */
+.layout-sidebar {
+  width: 260px;
+  height: 100%;
+  flex-shrink: 0;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+}
+
+/* 메인 영역 (상단바 + 콘텐츠) */
+.layout-main-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0; /* flex 자식의 너비 줄어듦 허용 */
+  background-color: #f9fafb;
+}
+
+/* 상단바 디자인 */
+.layout-topbar {
+  height: 60px;
+  padding: 0 1.5rem;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.menu-toggle-icon {
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #666;
+}
+
+.breadcrumb {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.user-name {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #374151;
+}
+
+/* 실제 탭 화면이 그려지는 곳 */
+.layout-content {
+  flex: 1;
+  padding: 0.75rem;
+  overflow: hidden; /* 내부 TabView에서 자체 스크롤 */
+}
+
+.sidebar-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.logo-area {
+  padding: 20px;
+  height: 60px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.logo-text {
+  color: var(--hw-orange);
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.p-panelmenu {
+  gap: 0 !important;
+}
+
+.p-panelmenu .p-panelmenu-panel {
+  margin: 0 !important;
+  border: 0 none !important;
+  box-shadow: none !important;
+}
+
+/* 1레벨 메뉴 헤더 */
+.p-panelmenu .p-panelmenu-header > a,
+.p-panelmenu .p-panelmenu-header-content {
+  border: 0 none !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+  background-color: #ffffff !important;
+  padding: 0px 16px !important;
+  min-height: auto !important;
+
+  border-radius: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* 활성화된 메뉴 (이미지처럼 연회색 배경 + 오렌지 포인트) */
+.p-panelmenu .p-panelmenu-panel.p-highlight .p-panelmenu-header-content {
+  background-color: var(--hw-bg-gray) !important;
+  border-left: 4px solid var(--hw-orange) !important;
+}
+
+.p-panelmenu .p-panelmenu-panel.p-highlight .p-panelmenu-header-label {
+  font-weight: 700 !important;
+  color: #111827 !important;
+}
+
+/* 아이콘(화살표)을 오른쪽 끝으로 배치 */
+.p-panelmenu .p-panelmenu-icon {
+  order: 2 !important;
+  margin-left: auto !important;
+}
+.p-panelmenu .p-panelmenu-header-label {
+  order: 1 !important;
+}
+
+/* 3. 서브메뉴(2레벨) 영역 */
+.p-panelmenu .p-panelmenu-content {
+  border: 0 none !important;
+  background-color: #ffffff !important;
+  padding: 4px 0 !important;
+  border-bottom: 1px solid #f1f5f9 !important;
+}
+
+.p-panelmenu .p-menuitem-link {
+  padding: 8px 16px 8px 35px !important; /* 왼쪽 들여쓰기 */
+  border: 0 none !important;
+}
+
+.p-panelmenu .p-menuitem-text {
+  color: #64748b !important;
+}
+
+.p-panelmenu .p-menuitem-link:hover {
+  background-color: #f8fafc !important;
+}
+
+/* 1. TabView 전체 컨테이너 */
+.p-tabview {
+  display: flex !important;
+  flex-direction: column !important;
+  height: 100% !important;
+}
+
+/* 2. 탭 헤더 네비게이션 영역 (줄바꿈 방지 핵심) */
+.p-tabview .p-tabview-nav-container {
+  padding-right: 45px !important; /* 버튼이 위치할 공간만큼 비워둠 */
+  background: #ffffff !important;
+}
+
+.p-tabview .p-tabview-nav-content {
+  display: block !important;
+  overflow-x: auto !important; /* 스크롤 가능하게 */
+  scroll-behavior: smooth;
+  /* 스크롤바 숨기기 (깔끔한 UI용) */
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.p-tabview-nav-content::-webkit-scrollbar {
+  display: none;
+}
+.p-tabview .p-tabview-nav {
+  display: flex !important;
+  flex-wrap: nowrap !important; /* 절대 줄바꿈 금지 */
+  background: #ffffff !important;
+  border: none !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  list-style: none !important;
+}
+
+/* 3. 개별 탭 버튼(Header) */
+.p-tabview .p-tabview-nav li {
+  flex: 0 0 auto !important;
+  display: block !important;
+}
+
+.p-tabview .p-tabview-nav li .p-tabview-nav-link {
+  border: none !important;
+  border-bottom: 2px solid transparent !important;
+  background: #ffffff !important;
+  color: #64748b !important;
+  padding: 10px 14px !important; /* 상하 10px, 좌우 14px */
+  font-size: 0.95rem !important; /* 13px 기준 */
+  font-weight: 500 !important;
+  transition: all 0.2s !important;
+  border-radius: 0 !important;
+  white-space: nowrap !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  height: 38px !important; /* 모든 탭 버튼 높이 통일 */
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+}
+
+/* 활성화된 탭 (한화 오렌지) */
+.p-tabview .p-tabview-nav li.p-highlight .p-tabview-nav-link {
+  color: #ff6600 !important;
+  border-bottom-color: #ff6600 !important;
+  background: #fffcf9 !important; /* 아주 연한 오렌지 배경 */
+}
+
+/* 탭 호버 효과 */
+.p-tabview .p-tabview-nav li:not(.p-highlight):not(.p-disabled) .p-tabview-nav-link:hover {
+  background: #f8fafc !important;
+  color: #1e293b !important;
+}
+
+/* 4. 탭 닫기 아이콘(X) */
+.tab-close-icon {
+  font-size: 0.7rem !important;
+  color: #94a3b8 !important;
+  padding: 2px !important;
+  border-radius: 50% !important;
+  transition: all 0.2s !important;
+}
+
+.tab-close-icon:hover {
+  background-color: #fee2e2 !important;
+  color: #ef4444 !important;
+}
+
+/* 5. 좌우 스크롤 버튼 커스텀 (틀어짐 방지) */
+.p-tabview .p-tabview-nav-btn {
+  width: 16px !important;
+  height: 100% !important;
+  min-height: 38px !important;
+  background: #ffffff !important;
+  color: #64748b !important;
+  border: none !important;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05) !important; /* 버튼 뒤 그림자 */
+  border-radius: 0 !important;
+  z-index: 2 !important;
+  position: absolute !important;
+  top: 0 !important;
+}
+
+.p-tabview .p-tabview-nav-prev {
+  left: 0 !important;
+}
+.p-tabview .p-tabview-nav-next {
+  right: 45px !important;
+}
+
+.p-tabview .p-tabview-nav-btn:hover {
+  color: #ff6600 !important;
+  background: #f8fafc !important;
+}
+
+/* 6. 탭 본문 영역 (Panels) */
+.p-tabview .p-tabview-panels {
+  padding: 12px !important;
+  background-color: transparent !important;
+  flex: 1 !important;
+  overflow-y: auto !important; /* 본문 스크롤 */
+}
