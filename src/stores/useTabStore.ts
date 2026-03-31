@@ -6,6 +6,7 @@ export const useTabStore = defineStore('tabs', () => {
   const dashboardId = 'M000';
   const openTabs = ref<AppTab[]>([{ id: dashboardId, title: '대시보드', path: '/' }]);
   const activeIndex = ref<number>(0);
+  const activeId = ref<string>(dashboardId);
 
   // 새로운 탭 추가
   const addTab = (tab: AppTab): void => {
@@ -17,6 +18,8 @@ export const useTabStore = defineStore('tabs', () => {
     } else {
       activeIndex.value = existingIndex;
     }
+    activeId.value = tab.id;
+    console.log('active', activeId.value);
   };
 
   // 탭 삭제
@@ -26,6 +29,7 @@ export const useTabStore = defineStore('tabs', () => {
       openTabs.value.splice(findIndex, 1);
       if (findIndex === activeIndex.value) {
         activeIndex.value = activeIndex.value - 1;
+        activeId.value = openTabs.value[activeIndex.value]?.id;
       }
     }
   };
@@ -35,5 +39,5 @@ export const useTabStore = defineStore('tabs', () => {
     openTabs.value = [{ id: dashboardId, title: '대시보드', path: '/' }];
     activeIndex.value = 0;
   };
-  return { openTabs, activeIndex, addTab, removeTab, closeAllTabs };
+  return { openTabs, activeIndex, activeId, addTab, removeTab, closeAllTabs };
 });

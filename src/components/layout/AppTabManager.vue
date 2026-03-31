@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref, watch, nextTick } from 'vue';
-import TabView from 'primevue/tabview';
-import TabPanel from 'primevue/tabpanel';
-import Button from 'primevue/button';
+import Tabs from 'primevue/tabs';
+import TabList from 'primevue/tablist';
+import Tab from 'primevue/tab';
 import { useTabStore } from '@/stores/useTabStore';
 import { storeToRefs } from 'pinia';
 import { useRouter } from 'vue-router';
@@ -10,64 +10,103 @@ import { useRouter } from 'vue-router';
 const tabStore = useTabStore();
 const router = useRouter();
 
-const { openTabs, activeIndex } = storeToRefs(tabStore);
+const { openTabs, activeIndex, activeId } = storeToRefs(tabStore);
 const tabViewRef = ref<{ $el: HTMLElement } | null>(null);
 
-const scrollToActiveTab = async () => {
-  // DOM이 업데이트될 때까지 기다림
-  await nextTick();
+// const scrollToActiveTab = async () => {
+//   // DOM이 업데이트될 때까지 기다림
+//   await nextTick();
 
-  setTimeout(() => {
-    if (!tabViewRef.value) return;
+//   setTimeout(() => {
+//     if (!tabViewRef.value) return;
 
-    const el = tabViewRef.value.$el;
-    // 1. 스크롤이 실제로 일어나는 컨테이너
-    const container = el.querySelector('.p-tabview-nav-content') as HTMLElement;
-    // 2. 활성화된 탭 (li 태그)
-    const activeTab = el.querySelector('.p-tabview-nav li.p-highlight') as HTMLElement;
+//     const el = tabViewRef.value.$el;
+//     // 1. 스크롤이 실제로 일어나는 컨테이너
+//     const container = el.querySelector('.p-tabview-nav-content') as HTMLElement;
+//     // 2. 활성화된 탭 (li 태그)
+//     const activeTab = el.querySelector('.p-tabview-nav li.p-highlight') as HTMLElement;
 
-    if (container && activeTab) {
-      // 3. 중앙 정렬을 위한 좌표 계산
-      const scrollLeft =
-        activeTab.offsetLeft - container.clientWidth / 2 + activeTab.clientWidth / 2;
+//     if (container && activeTab) {
+//       // 3. 중앙 정렬을 위한 좌표 계산
+//       const scrollLeft =
+//         activeTab.offsetLeft - container.clientWidth / 2 + activeTab.clientWidth / 2;
 
-      container.scrollTo({
-        left: scrollLeft,
-        behavior: 'smooth',
-      });
-    }
-  }, 100);
-};
+//       container.scrollTo({
+//         left: scrollLeft,
+//         behavior: 'smooth',
+//       });
+//     }
+//   }, 100);
+// };
 
+// watch(
+//   activeIndex,
+//   (newIndex) => {
+//     const tab = openTabs.value[newIndex];
+//     if (tab) {
+//       console.log('111');
+//       scrollToActiveTab();
+//       router.push(tab.path);
+//     }
+//   },
+//   { flush: 'post' },
+// );
 watch(
   activeIndex,
   (newIndex) => {
     const tab = openTabs.value[newIndex];
     if (tab) {
-      console.log('111');
-      scrollToActiveTab();
       router.push(tab.path);
     }
   },
   { flush: 'post' },
 );
-
-watch(
-  () => openTabs.value.length,
-  () => {
-    scrollToActiveTab();
-  },
-  { flush: 'post' },
-);
+// watch(
+//   () => openTabs.value.length,
+//   () => {
+//     scrollToActiveTab();
+//   },
+//   { flush: 'post' },
+// );
 
 const handleClose = (index: number): void => {
   const tab = openTabs.value[index];
   if (tab) tabStore.removeTab(tab.id);
 };
+
+const scrollableTabs = ref(
+  Array.from({ length: 50 }, (_, i) => ({
+    key: i,
+    title: `Tab ${i + 1}`,
+    content: `Tab ${i + 1} Content`,
+  })),
+);
 </script>
 
 <template>
-  <div class="tab-manager-root">
+  <div>
+    <Tabs :value="activeId" :selectOnFocus="true">
+      <TabList>
+        <Tab v-for="tab in openTabs" :key="tab.id" :value="tab.id">
+          <div class="tab-label">
+            <i class="pi pi-home" />
+            <span>{{ tab.title }}</span>
+            <i v-if="tab.id !== 'M000'" class="pi pi-times close-icon" />
+          </div>
+        </Tab>
+      </TabList>
+    </Tabs>
+    <div class="tab-content-area">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <keep-alive>
+            <component :is="Component" :key="$route.fullPath" />
+          </keep-alive>
+        </transition>
+      </router-view>
+    </div>
+  </div>
+  <!-- <div class="tab-manager-root">
     <div class="tab-view-wrapper">
       <TabView v-model:activeIndex="activeIndex" :scrollable="true">
         <TabPanel v-for="(tab, index) in openTabs" :key="tab.id">
@@ -100,10 +139,13 @@ const handleClose = (index: number): void => {
         />
       </div>
     </div>
-  </div>
+  </div> -->
 </template>
 
 <style scoped>
+.p_tabview_nav {
+  height: 38px;
+}
 .tab-manager-root {
   height: 100%;
   display: flex;
