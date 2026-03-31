@@ -13,6 +13,10 @@
   background-color: var(--surface-overlay);
   border-radius: var(--content-border-radius);
   padding: 0.5rem 1.5rem;
+  background-color: #333333;
+  border-right: 1px solid #27272a;
+  scrollbar-width: thin;
+  scrollbar-color: #4f4f56 transparent;
 }
 
 .layout-menu {
@@ -21,6 +25,44 @@
   list-style-type: none;
 }
 
-.p-panelmenu .p-panelmenu-panel {
+/* .p-panelmenu .p-panelmenu-panel {
   border: none;
+} */
+
+.layout-menu {
+  --p-panelmenu-panel-background: #333333;
+  --p-panelmenu-panel-border-width: 0;
+  --p-panelmenu-header-background: #333333;
+  --p-panelmenu-header-focus-background: #27272a;
+  --p-panelmenu-content-background: #09090b;
+
+  /* 1차 메뉴(Header) 설정 */
+  --p-panelmenu-header-color: #a1a1aa; /* 기본 글자색 */
+  --p-panelmenu-header-hover-color: #ffffff; /* 호버 시 글자색 */
+  --p-panelmenu-header-hover-background: #27272a;
+
+  /* 2차 메뉴(Item) 설정 */
+  --p-panelmenu-item-color: #dddddd; /* 하위 메뉴 글자색 */
+  --p-panelmenu-item-focus-background: rgba(255, 102, 0, 0.1); /* 오렌지색 투명 배경 */
+  --p-panelmenu-item-focus-color: #ff6600; /* 활성화 시 한화 오렌지 */
+
+  /* 아이콘 색상 */
+  --p-panelmenu-item-icon-color: #ff6600;
+
+  --p-panelmenu-submenu-icon-color: #dddddd;
+
+  --p-panelmenu-panel-border-color: transparent;
+  --p-panelmenu-header-border-color: transparent;
+  --p-panelmenu-content-border-color: transparent;
+}
+
+.layout-menu {
+  margin-bottom: 0.5rem;
+}
+
+.layout-menu .router-link-active {
+  background-color: rgba(255, 102, 0, 0.1) !important; /* 연한 한화 오렌지 배경 */
+  color: #ff6600 !important; /* 한화 오렌지 텍스트 */
+  font-weight: 700;
+  border-left: 4px solid #ff6600;
 }

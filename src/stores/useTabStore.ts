@@ -1,43 +1,52 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
 import type { AppTab, TabId } from '@/types/layout';
+import { useRouter, useRoute } from 'vue-router';
 
 export const useTabStore = defineStore('tabs', () => {
-  const dashboardId = 'M000';
-  const openTabs = ref<AppTab[]>([{ id: dashboardId, title: '대시보드', path: '/' }]);
-  const activeIndex = ref<number>(0);
-  const activeId = ref<string>(dashboardId);
+  const dashboardTo = '/';
+  const openTabs = ref<AppTab[]>([{ title: '대시보드', to: dashboardTo }]);
+  const activeId = ref<string>(dashboardTo);
+  const router = useRouter();
+  const route = useRoute();
 
   // 새로운 탭 추가
   const addTab = (tab: AppTab): void => {
-    const existingIndex = openTabs.value.findIndex((t) => t.id === tab.id);
+    const existingIndex = openTabs.value.findIndex((t) => t.to === tab.to);
 
     if (existingIndex === -1) {
       openTabs.value.push(tab);
-      activeIndex.value = openTabs.value.length - 1;
-    } else {
-      activeIndex.value = existingIndex;
     }
-    activeId.value = tab.id;
+    if (activeId.value != tab.to) activeId.value = tab.to;
     console.log('active', activeId.value);
   };
 
   // 탭 삭제
-  const removeTab = (id: TabId): void => {
-    const findIndex = openTabs.value.findIndex((t) => t.id === id);
-    if (findIndex > -1) {
-      openTabs.value.splice(findIndex, 1);
-      if (findIndex === activeIndex.value) {
-        activeIndex.value = activeIndex.value - 1;
-        activeId.value = openTabs.value[activeIndex.value]?.id;
+  const removeTab = async (id: string) => {
+    console.log('remove', id);
+    //openTabs.value = openTabs.value.filter((t) => t.to !== id);
+    const index = openTabs.value.findIndex((t) => t.to === id);
+    if (index === -1) return;
+
+    const isClosingActiveTab = route.path === id;
+
+    if (isClosingActiveTab) {
+      let newPath = '/';
+      if (openTabs.value.length > 0) {
+        newPath = openTabs.value[index + 1]?.to || openTabs.value[index - 1]?.to || dashboardTo;
       }
+      console.log('remove newpath', newPath);
+      activeId.value = newPath;
+      await router.push(newPath);
     }
+
+    //openTabs.value.splice(index, 1);
   };
 
   // 모든 탭 닫기 (대시보드 제외)
   const closeAllTabs = (): void => {
-    openTabs.value = [{ id: dashboardId, title: '대시보드', path: '/' }];
-    activeIndex.value = 0;
+    openTabs.value = [{ title: '대시보드', to: dashboardTo }];
+    activeId.value = dashboardTo;
   };
-  return { openTabs, activeIndex, activeId, addTab, removeTab, closeAllTabs };
+  return { openTabs, activeId, addTab, removeTab, closeAllTabs };
 });

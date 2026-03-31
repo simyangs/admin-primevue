@@ -1,25 +1,26 @@
+import { defineAsyncComponent } from 'vue';
 import { createRouter, createWebHistory } from 'vue-router';
-import SMP_000 from '@/views/sample/SMP_000.vue';
+import SMP_000 from '@/views/sample/SMP_0.vue';
+
+const arrRoute = [
+  {
+    path: '/',
+    name: 'dashboard',
+    component: SMP_000,
+  },
+];
+
+for (let i = 1; i < 13; i++) {
+  arrRoute.push({
+    path: `/SMP${i}`,
+    name: `sample${i}`,
+    component: () => import(`@/views/sample/SMP_${i}.vue`),
+  });
+}
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [
-    {
-      path: '/',
-      name: 'dashboard',
-      component: SMP_000,
-    },
-    {
-      path: '/SMP0001',
-      name: 'sample1',
-      component: () => import('@/views/sample/SMP_001.vue'),
-    },
-    {
-      path: '/SMP0002',
-      name: 'sample2',
-      component: () => import('@/views/sample/SMP_002.vue'),
-    },
-  ],
+  routes: arrRoute,
 });
 
 export default router;

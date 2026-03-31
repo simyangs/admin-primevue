@@ -5,93 +5,71 @@ import TabList from 'primevue/tablist';
 import Tab from 'primevue/tab';
 import { useTabStore } from '@/stores/useTabStore';
 import { storeToRefs } from 'pinia';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 
 const tabStore = useTabStore();
+const route = useRoute();
 const router = useRouter();
+const { openTabs, activeId } = storeToRefs(tabStore);
+const tabViewRef = ref<HTMLElement | null>(null);
 
-const { openTabs, activeIndex, activeId } = storeToRefs(tabStore);
-const tabViewRef = ref<{ $el: HTMLElement } | null>(null);
+const scrollToActiveTab = async (path: string) => {
+  // DOM이 업데이트될 때까지 기다림
+  await nextTick();
 
-// const scrollToActiveTab = async () => {
-//   // DOM이 업데이트될 때까지 기다림
-//   await nextTick();
+  if (tabViewRef.value) {
+    const activeTabElement = tabViewRef.value?.querySelector(`[data-path="${path}"]`);
 
-//   setTimeout(() => {
-//     if (!tabViewRef.value) return;
-
-//     const el = tabViewRef.value.$el;
-//     // 1. 스크롤이 실제로 일어나는 컨테이너
-//     const container = el.querySelector('.p-tabview-nav-content') as HTMLElement;
-//     // 2. 활성화된 탭 (li 태그)
-//     const activeTab = el.querySelector('.p-tabview-nav li.p-highlight') as HTMLElement;
-
-//     if (container && activeTab) {
-//       // 3. 중앙 정렬을 위한 좌표 계산
-//       const scrollLeft =
-//         activeTab.offsetLeft - container.clientWidth / 2 + activeTab.clientWidth / 2;
-
-//       container.scrollTo({
-//         left: scrollLeft,
-//         behavior: 'smooth',
-//       });
-//     }
-//   }, 100);
-// };
-
-// watch(
-//   activeIndex,
-//   (newIndex) => {
-//     const tab = openTabs.value[newIndex];
-//     if (tab) {
-//       console.log('111');
-//       scrollToActiveTab();
-//       router.push(tab.path);
-//     }
-//   },
-//   { flush: 'post' },
-// );
-watch(
-  activeIndex,
-  (newIndex) => {
-    const tab = openTabs.value[newIndex];
-    if (tab) {
-      router.push(tab.path);
+    if (activeTabElement) {
+      // 3. 해당 요소로 부드럽게 스크롤 이동
+      activeTabElement.scrollIntoView({
+        behavior: 'smooth', // 부드러운 이동
+        block: 'nearest', // 수직 위치는 최대한 유지
+        inline: 'center', // 수평 위치는 중앙으로 (가장 보기 좋음)
+      });
     }
-  },
-  { flush: 'post' },
-);
-// watch(
-//   () => openTabs.value.length,
-//   () => {
-//     scrollToActiveTab();
-//   },
-//   { flush: 'post' },
-// );
-
-const handleClose = (index: number): void => {
-  const tab = openTabs.value[index];
-  if (tab) tabStore.removeTab(tab.id);
+  }
 };
 
-const scrollableTabs = ref(
-  Array.from({ length: 50 }, (_, i) => ({
-    key: i,
-    title: `Tab ${i + 1}`,
-    content: `Tab ${i + 1} Content`,
-  })),
+watch(
+  () => route.path,
+  async (path) => {
+    console.log('addtab', path);
+    tabStore.addTab({
+      title: String(route.name),
+      to: path,
+    });
+    await scrollToActiveTab(path);
+  },
 );
+
+const handleClose = (id: string): void => {
+  tabStore.removeTab(id);
+};
+
+const handleChangedTab = (value: string | number) => {
+  //activeId.value = String(value);
+  console.log('chaged tab activeId', activeId.value);
+  console.log('chaged tab', value);
+  const isExist = openTabs.value.some((t) => t.to === value);
+  if (isExist && route.path !== value) {
+    router.push(String(value));
+  }
+};
 </script>
 
 <template>
-  <div>
-    <Tabs :value="activeId" :selectOnFocus="true">
+  <div ref="tabViewRef">
+    <Tabs :value="activeId" :selectOnFocus="true" @update:value="handleChangedTab">
       <TabList>
-        <Tab v-for="tab in openTabs" :key="tab.id" :value="tab.id">
+        <Tab v-for="tab in openTabs" :key="tab.to" :value="tab.to" :data-path="tab.to">
           <div class="tab-label">
-            <i class="pi pi-home" />
             <span>{{ tab.title }}</span>
-            <i v-if="tab.id !== 'M000'" class="pi pi-times close-icon" />
+            <i
+              v-if="tab.to !== '/'"
+              class="pi pi-times close-icon"
+              @click="() => handleClose(tab.to)"
+            />
           </div>
         </Tab>
       </TabList>

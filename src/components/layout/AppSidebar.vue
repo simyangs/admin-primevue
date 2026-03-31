@@ -1,7 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+//import { ref } from 'vue';
 import AppMenu from './AppMenu.vue';
-const sidebarRef = ref(null);
+//const sidebarRef = ref(null);
 </script>
 
 <template>

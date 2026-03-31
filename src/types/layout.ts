@@ -6,9 +6,8 @@ export type TabId = string;
 
 // 멀티탭 구성을 위한 인터페이스
 export interface AppTab {
-  id: TabId;
   title: string;
-  path: string;
+  to: string;
   componentName?: string;
 }
 
@@ -17,8 +16,9 @@ export interface AppMenuItem extends Omit<MenuItem, 'items' | 'command'> {
   key?: string;
   label: string;
   icon?: string;
-  path?: string;
+  to?: string;
   items?: AppMenuItem[]; // 재귀적 선언으로 2레벨 보장
+  expanded?: boolean;
   command?: (event: MenuItemCommandEvent) => void;
 }
 
