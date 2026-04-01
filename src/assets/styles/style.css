@@ -1,8 +1,9 @@
 @charset "utf-8";
 
+@import 'tailwindcss';
 @import './_variables.css';
 @import './_base.css';
 @import './_topbar.css';
 @import './_sidebar.css';
 @import './_main.css';
-@import './_table.css';
+@import './_datatable.css';

@@ -1,0 +1,24 @@
+.hw_data_table {
+  --p-datatable-header-padding: 0;
+}
+
+.hw_data_table .custom-multiselect-button {
+  border: none;
+  padding: 1rem 0.5rem;
+  color: white;
+  cursor: pointer;
+  width: auto; /* 고정 너비 해제 */
+  min-width: 0;
+  transition: background 0.2s;
+}
+
+.hw_data_table .p-multiselect-dropdown {
+  display: block;
+}
+
+.hw_data_table .p-multiselect-label-container {
+  display: none;
+}
+.hw_data_table .p-multiselect {
+  box-shadow: none;
+}

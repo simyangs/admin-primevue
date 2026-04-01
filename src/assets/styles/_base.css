@@ -1,12 +1,15 @@
+:root {
+  font-size: 14px;
+}
+
 html {
   height: 100%;
-  font-size: 14px;
   line-height: 1.2;
 }
 
 body {
-  font-family: 'Lato', sans-serif;
-  color: var(--text-color);
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+  color: var(--p-surface-900);
   background-color: var(--surface-ground);
   margin: 0;
   padding: 0;
@@ -23,7 +26,24 @@ a {
   min-height: 100vh;
 }
 
-button {
-  border: none;
-  /* background-color: transparent; */
+.p-inputtext,
+.p-select,
+.p-datepicker-input,
+.p-inputnumber-input {
+  font-size: 14px !important;
+  font-family: inherit;
+  padding: 0.5rem 0.75rem; /* 조금 더 콤팩트한 패딩 */
+  border-radius: 6px;
+}
+
+/* 2. 포커스 시 한화 오렌지(#FF6600) 강조 */
+.p-inputtext:enabled:focus {
+  border-color: var(--p-primary-500) !important;
+  box-shadow: 0 0 0 1px var(--p-primary-200) !important;
+}
+
+/* 3. 셀렉트 박스(Select) 스타일 조정 */
+.p-select {
+  height: 34px; /* 14px 폰트에 적절한 높이 */
+  align-items: center;
 }

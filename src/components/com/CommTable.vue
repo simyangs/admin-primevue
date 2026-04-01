@@ -3,11 +3,14 @@ import { ref, computed } from 'vue';
 import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
 import MultiSelect from 'primevue/multiselect';
 import Column from 'primevue/column';
-import Button from 'primevue/button';
+
 interface CommTableColumnProps<T> {
   field: keyof T | string;
   header: string;
   visible?: boolean;
+  width?: string;
+  sortable?: boolean;
+  onCellClick?: (data: T) => void;
 }
 const props = withDefaults(
   defineProps<{
@@ -18,30 +21,32 @@ const props = withDefaults(
     totalRecords?: number;
     scrollable?: boolean;
     height?: string;
+    columnFilter?: boolean;
     onPage?: (event: DataTablePageEvent) => void;
     onSort?: (event: DataTableSortEvent) => void;
 
     data: T[];
     columns: CommTableColumnProps<T>[];
   }>(),
-  {},
+  {
+    paginator: false,
+    rows: 10,
+    rowsPerPageOptions: () => [10, 20, 50, 100],
+    lazy: false,
+    totalRecords: 0,
+    scrollable: true,
+    height: '450px',
+    columnFilter: true,
+  },
 );
 const selectedColumns = ref<CommTableColumnProps<T>[]>(
   props.columns.filter((col) => col.visible !== false),
 );
 
-defineSlots<{
-  [K in keyof T | string]: (props: {
-    data: T;
-    index: number;
-    column: any; // PrimeVue 내부 객체
-    columnConfig: CommTableColumnProps<T>;
-  }) => any;
-}>();
-
 const tableProps = computed(() => {
   const base = {
     value: props.data,
+    removableSort: true,
   };
 
   // 페이징 기능이 필요할 때만 관련 속성 추가
@@ -68,9 +73,27 @@ const tableProps = computed(() => {
   return { ...base, ...pagination, ...scrolling };
 });
 
-const onToggle = (val: any) => {
-  selectedColumns.value = props.columns.filter((col) => val.includes(col));
+const columnProps = (field: string) => {
+  const colProp: Record<string, string | number | boolean | object> = {};
+
+  for (const col of props.columns) {
+    if (col.field === field) {
+      if (col.sortable) colProp.sortable = true;
+      const colStyle: Record<string, string | number> = {};
+      if (col.width) colStyle.width = col.width;
+      colProp.style = colStyle;
+      break;
+    }
+  }
+  return colProp;
 };
+
+const onToggle = (val: CommTableColumnProps<T>[]) => {
+  selectedColumns.value = props.columns.filter((col) => val.some((t) => t.field === col.field));
+};
+
+console.log(props.columns);
+console.log(selectedColumns.value);
 </script>
 <template>
   <div class="hw_data_table">
@@ -97,30 +120,23 @@ const onToggle = (val: any) => {
         v-for="(col, index) of selectedColumns"
         :field="col.field as string"
         :header="col.header"
-        :key="(col.field + index) as string"
-      ></Column>
+        :key="(col.field as string) + index"
+        v-bind="columnProps(col.field as string)"
+      >
+        <template #body="slotProps">
+          <div
+            @click.stop="col.onCellClick ? col.onCellClick(slotProps.data) : null"
+            :class="{ 'cursor-pointer': col.onCellClick }"
+          >
+            <template v-if="$slots[col.field as string]">
+              <slot :name="col.field as string" v-bind="slotProps"></slot>
+            </template>
+            <template v-else>
+              {{ slotProps.data[col.field] }}
+            </template>
+          </div>
+        </template>
+      </Column>
     </DataTable>
   </div>
 </template>
-<style scoped>
-:deep(.custom-multiselect-button) {
-  border: none;
-  padding: 1rem 0.5rem;
-  color: white;
-  cursor: pointer;
-  width: auto; /* 고정 너비 해제 */
-  min-width: 0;
-  transition: background 0.2s;
-}
-
-:deep(.p-multiselect-dropdown) {
-  display: block;
-}
-
-:deep(.p-multiselect-label-container) {
-  display: none;
-}
-:deep(.p-multiselect) {
-  box-shadow: none;
-}
-</style>
