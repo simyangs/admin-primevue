@@ -22,12 +22,12 @@ export const useTabStore = defineStore('tabs', () => {
   };
 
   // 탭 삭제
-  const removeTab = async (id: string) => {
+  const removeTab = (id: string) => {
     console.log('remove', id);
     //openTabs.value = openTabs.value.filter((t) => t.to !== id);
     const index = openTabs.value.findIndex((t) => t.to === id);
     if (index === -1) return;
-
+    openTabs.value.splice(index, 1);
     const isClosingActiveTab = route.path === id;
 
     if (isClosingActiveTab) {
@@ -37,10 +37,8 @@ export const useTabStore = defineStore('tabs', () => {
       }
       console.log('remove newpath', newPath);
       activeId.value = newPath;
-      await router.push(newPath);
+      router.push(newPath);
     }
-
-    //openTabs.value.splice(index, 1);
   };
 
   // 모든 탭 닫기 (대시보드 제외)

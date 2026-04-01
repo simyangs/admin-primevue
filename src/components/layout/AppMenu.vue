@@ -8,7 +8,7 @@ import { useRoute } from 'vue-router';
 const route = useRoute();
 const tabStore = useTabStore();
 const expandedKeys = ref({});
-// const expandedKeys = ref<ExpandedKeys>({});
+
 const menuList: AppMenuItem[] = [
   { key: 'M000', label: '대시보드', to: '/' },
   { key: 'C001', label: '관리1', items: [{ key: 'M001', label: '샘플1', to: '/SMP1' }] },
@@ -29,19 +29,12 @@ const addMenuItem = (menu: AppMenuItem) => {
   const menuItem: AppMenuItem = { key: menu.key, label: menu.label };
   if (menu.to) {
     menuItem.to = menu.to;
-    // menuItem.command = () => {
-    //   tabStore.addTab({
-    //     title: menu.label,
-    //     to: menu.to!,
-    //   });
-    // };
   } else if (menu.items) {
     const subItems: AppMenuItem[] = [];
     for (const subItem of menu.items) {
       subItems.push(addMenuItem(subItem));
     }
     menuItem.items = subItems;
-    // menuItem.expanded = true;
   }
   return menuItem;
 };
@@ -52,7 +45,6 @@ for (const item of menuList) {
 }
 
 const syncMenuWithRoute = () => {
-  console.log('syncMenuWithRoute');
   menuItems.forEach((item) => {
     if (item.items) {
       // 자식 메뉴 중에 현재 경로와 일치하는 항목이 있는지 확인

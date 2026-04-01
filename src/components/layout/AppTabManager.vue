@@ -43,14 +43,11 @@ watch(
   },
 );
 
-const handleClose = (id: string): void => {
+const handleClose = (id: string) => {
   tabStore.removeTab(id);
 };
 
 const handleChangedTab = (value: string | number) => {
-  //activeId.value = String(value);
-  console.log('chaged tab activeId', activeId.value);
-  console.log('chaged tab', value);
   const isExist = openTabs.value.some((t) => t.to === value);
   if (isExist && route.path !== value) {
     router.push(String(value));
@@ -60,15 +57,15 @@ const handleChangedTab = (value: string | number) => {
 
 <template>
   <div ref="tabViewRef">
-    <Tabs :value="activeId" :selectOnFocus="true" @update:value="handleChangedTab">
-      <TabList>
+    <Tabs :value="activeId" @update:value="handleChangedTab">
+      <TabList :key="openTabs.length">
         <Tab v-for="tab in openTabs" :key="tab.to" :value="tab.to" :data-path="tab.to">
           <div class="tab-label">
             <span>{{ tab.title }}</span>
             <i
               v-if="tab.to !== '/'"
               class="pi pi-times close-icon"
-              @click="() => handleClose(tab.to)"
+              @click.stop="() => handleClose(tab.to)"
             />
           </div>
         </Tab>
