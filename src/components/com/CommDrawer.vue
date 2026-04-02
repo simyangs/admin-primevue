@@ -43,9 +43,10 @@ const handleClose = () => {
     :dismissable="false"
   >
     <template #header>
-      <div class="hw-drawer-header">
-        <h2 class="hw-drawer-title">{{ header }}</h2>
-        <div class="hw-title-bar"></div>
+      <div class="cmm-drawer-header">
+        <div class="title">
+          {{ header }}
+        </div>
       </div>
     </template>
 

@@ -1,0 +1,45 @@
+.tab-manager .p-tab {
+  height: 3rem;
+  min-width: 100px;
+  padding: 0 16px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+.tab-manager .p-tablist-content {
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.tab-manager .p-tab-active {
+  font-weight: 700;
+  border: none;
+}
+
+.tab-manager .p-tablist-active-bar {
+  height: 3px !important;
+}
+
+.tab-manager .tab-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.tab-manager .close-icon {
+  font-size: 0.65rem;
+  padding: 3px;
+  border-radius: 50%;
+  transition: all 0.2s;
+}
+
+.tab-manager .tab-content-area {
+  padding: 1rem;
+  background-color: #f8fafc;
+  min-height: calc(100vh - 9rem);
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  overflow: hidden;
+}

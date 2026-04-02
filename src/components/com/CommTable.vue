@@ -3,6 +3,7 @@ import { ref, computed } from 'vue';
 import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
 import MultiSelect from 'primevue/multiselect';
 import Column from 'primevue/column';
+import { formatNumber } from '@/utils/formatter';
 
 interface CommTableColumnProps<T> {
   field: keyof T | string;
@@ -55,7 +56,7 @@ const tableProps = computed(() => {
         paginator: true,
         rows: props.rows || 10,
         rowsPerPageOptions: props.rowsPerPageOptions || [10, 20, 50],
-        lazy: props.lazy,
+        lazy: true,
         totalRecords: props.totalRecords,
         onPage: props.onPage,
         onSort: props.onSort,
@@ -96,24 +97,32 @@ console.log(props.columns);
 console.log(selectedColumns.value);
 </script>
 <template>
-  <div class="hw_data_table">
+  <div class="cmm-datatable">
     <DataTable v-bind="tableProps">
       <template #header>
-        <div style="text-align: left">
-          <MultiSelect
-            class="custom-multiselect-button"
-            :modelValue="selectedColumns"
-            :options="props.columns"
-            optionLabel="header"
-            @update:modelValue="onToggle"
-            :maxSelectedLabels="0"
-          >
-            <template #dropdownicon>
-              <div>
-                <i class="pi pi-filter">&nbsp;COLUMNS</i>
-              </div>
-            </template>
-          </MultiSelect>
+        <div class="cmm-datatable-header">
+          <div>
+            <MultiSelect
+              class="column-filter"
+              :modelValue="selectedColumns"
+              :options="props.columns"
+              optionLabel="header"
+              @update:modelValue="onToggle"
+              :maxSelectedLabels="0"
+            >
+              <template #dropdownicon>
+                <div class="flex">
+                  <i class="pi pi-filter" />
+                  <span class="ml-2">COLUMNS</span>
+                </div>
+              </template>
+            </MultiSelect>
+          </div>
+          <div>
+            <span
+              >전체 {{ paginator ? formatNumber(totalRecords) : formatNumber(data.length) }}건</span
+            >
+          </div>
         </div>
       </template>
       <Column
@@ -129,7 +138,7 @@ console.log(selectedColumns.value);
             :class="{ 'cursor-pointer': col.onCellClick }"
           >
             <template v-if="$slots[col.field as string]">
-              <slot :name="col.field as string" v-bind="slotProps"></slot>
+              <slot :name="String(col.field)" v-bind="slotProps"></slot>
             </template>
             <template v-else>
               {{ slotProps.data[col.field] }}

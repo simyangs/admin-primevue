@@ -1,0 +1,30 @@
+.cmm-modal-header,
+.cmm-drawer-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+}
+
+.cmm-modal-header::before,
+.cmm-drawer-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background-color: var(--p-primary-500); /* 한화 오렌지 */
+  border-radius: 0 2px 2px 0;
+}
+
+.cmm-modal-header .title,
+.cmm-drawer-header .title {
+  font-size: 1.25rem;
+  font-weight: 500;
+  color: var(--p-surface-900);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-left: 1rem;
+}

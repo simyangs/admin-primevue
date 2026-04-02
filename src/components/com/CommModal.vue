@@ -30,9 +30,10 @@ const close = () => emit('update:visible', false);
     :style="{ width: width || '520px' }"
   >
     <template #header>
-      <div class="modal-header-container">
-        <h2 class="modal-title">{{ header }}</h2>
-        <div class="title-underline"></div>
+      <div class="cmm-modal-header">
+        <div class="title">
+          {{ header }}
+        </div>
       </div>
     </template>
 
@@ -59,6 +60,7 @@ const close = () => emit('update:visible', false);
 
 :deep(.p-dialog-header) {
   padding: 1.5rem 2rem 1rem 2rem;
+
   background: #fff;
 }
 

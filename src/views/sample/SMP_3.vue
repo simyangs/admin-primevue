@@ -57,10 +57,6 @@ console.log(props);
 </template>
 
 <style scoped>
-.detail-container {
-  padding: 2rem;
-}
-
 .info-table {
   /* 이미지의 테이블 헤더 느낌을 본떠 상단 라인 강조 */
   border-top: 1px solid var(--p-surface-300);

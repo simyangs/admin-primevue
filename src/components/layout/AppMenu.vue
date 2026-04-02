@@ -1,12 +1,10 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue';
-import PanelMenu from 'primevue/panelmenu';
-import { useTabStore } from '@/stores/useTabStore';
-import type { AppMenuItem } from '@/types/layout';
 import { useRoute } from 'vue-router';
+import PanelMenu from 'primevue/panelmenu';
+import type { AppMenuItem } from '@/types/layout';
 
 const route = useRoute();
-const tabStore = useTabStore();
 const expandedKeys = ref({});
 
 const menuList: AppMenuItem[] = [

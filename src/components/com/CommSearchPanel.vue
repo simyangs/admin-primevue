@@ -16,7 +16,7 @@
   background-color: #ffffff;
   padding: 1.25rem;
 
-  border: 1px solid #ddd;
+  border: 1px solid #e2e8f0;
 
   border-radius: 0;
   margin-bottom: 1rem;
@@ -54,9 +54,9 @@
   white-space: nowrap;
 }
 
-:deep(.form-group .p-inputtext),
+/* :deep(.form-group .p-inputtext),
 :deep(.form-group .p-datepicker),
 :deep(.form-group .p-select) {
-  width: 180px; /* 인풋박스 기본 너비 권장 */
-}
+  width: 180px;
+} */
 </style>

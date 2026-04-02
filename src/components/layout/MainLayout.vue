@@ -4,8 +4,6 @@ import { useLayout } from '@/composables/useLayout';
 import AppTopbar from './AppTopbar.vue';
 import AppSidebar from './AppSidebar.vue';
 import AppTabManager from './AppTabManager.vue';
-import Button from 'primevue/button';
-// import '@/assets/styles/layout.css';
 
 /**
  * 레이아웃 구성:

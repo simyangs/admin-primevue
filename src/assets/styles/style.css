@@ -3,7 +3,9 @@
 @import 'tailwindcss';
 @import './_variables.css';
 @import './_base.css';
+@import './_main.css';
 @import './_topbar.css';
 @import './_sidebar.css';
-@import './_main.css';
+@import './_tabmanager.css';
+@import './_overlay.css';
 @import './_datatable.css';

@@ -42,7 +42,7 @@ export const HWPreset = definePreset(Aura, {
       200: '#FFC2A3',
       300: '#FF9A6B',
       400: '#FF7A3D',
-      500: '#FF6600', // 한화 메인 컬러
+      500: '#FF6600',
       600: '#E65C00',
       700: '#B34700',
       800: '#803300',

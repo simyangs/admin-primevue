@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import DatePicker from 'primevue/datepicker';
+import { formatNumericToDateString } from '@/utils/formatter';
 interface DatePickerProps {
   date?: string | string[] | null;
   isRange?: boolean;
@@ -12,6 +13,12 @@ const props = withDefaults(defineProps<DatePickerProps>(), {
 });
 
 const emit = defineEmits(['update:modelValue']);
+
+const onInput = (event: Event) => {
+  if (props.isRange) return;
+  const input = event.target as HTMLInputElement;
+  input.value = formatNumericToDateString(input.value);
+};
 
 const stringToDate = (str: string | null) => {
   if (!str) return null;
@@ -60,5 +67,13 @@ const internalValue = computed({
 </script>
 
 <template>
-  <DatePicker v-model="internalValue" :selectionMode="isRange ? 'range' : 'single'" />
+  <DatePicker
+    v-model="internalValue"
+    :selectionMode="isRange ? 'range' : 'single'"
+    :manualInput="false"
+    showIcon
+    showButtonBar
+    iconDisplay="input"
+    @input="onInput"
+  />
 </template>
