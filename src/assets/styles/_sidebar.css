@@ -1,11 +1,11 @@
 .layout-sidebar {
   position: fixed;
   width: 20rem;
-  height: calc(100vh - 8rem);
+  height: calc(100vh - 6rem);
   z-index: 999;
   overflow-y: auto;
   user-select: none;
-  top: 6rem;
+  top: 4rem;
   left: 2rem;
   transition:
     transform var(--layout-section-transition-duration),
@@ -23,6 +23,7 @@
   margin: 0;
   padding: 0;
   list-style-type: none;
+  margin-bottom: 0.5rem;
 }
 
 /* .p-panelmenu .p-panelmenu-panel {
@@ -54,10 +55,6 @@
   --p-panelmenu-panel-border-color: transparent;
   --p-panelmenu-header-border-color: transparent;
   --p-panelmenu-content-border-color: transparent;
-}
-
-.layout-menu {
-  margin-bottom: 0.5rem;
 }
 
 .layout-menu .router-link-active {

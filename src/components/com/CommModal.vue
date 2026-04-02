@@ -22,7 +22,7 @@ const close = () => emit('update:visible', false);
 <template>
   <Dialog
     :visible="visible"
-    @update:visible="(val) => emit('update:visible', val)"
+    @update:visible="(val: boolean) => emit('update:visible', val)"
     :header="header"
     :modal="true"
     class="hw-modal"
@@ -36,7 +36,7 @@ const close = () => emit('update:visible', false);
       </div>
     </template>
 
-    <div class="modal-body-content">
+    <div class="modal-body-content" autofocus>
       <component
         v-if="component"
         :is="component"

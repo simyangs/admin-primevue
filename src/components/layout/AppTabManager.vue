@@ -58,7 +58,11 @@ const handleChangedTab = (value: string | number) => {
 <template>
   <div ref="tabViewRef">
     <Tabs :value="activeId" @update:value="handleChangedTab">
-      <TabList :key="openTabs.length">
+      <TabList
+        :key="openTabs.map((t) => t.to).join(',')"
+        :scrollable="true"
+        :showNavigators="false"
+      >
         <Tab v-for="tab in openTabs" :key="tab.to" :value="tab.to" :data-path="tab.to">
           <div class="tab-label">
             <span>{{ tab.title }}</span>
@@ -73,101 +77,85 @@ const handleChangedTab = (value: string | number) => {
     </Tabs>
     <div class="tab-content-area">
       <router-view v-slot="{ Component }">
-        <transition name="fade" mode="out-in">
-          <keep-alive>
-            <component :is="Component" :key="$route.fullPath" />
-          </keep-alive>
-        </transition>
+        <keep-alive>
+          <component :is="Component" :key="$route.fullPath" />
+        </keep-alive>
       </router-view>
     </div>
   </div>
-  <!-- <div class="tab-manager-root">
-    <div class="tab-view-wrapper">
-      <TabView v-model:activeIndex="activeIndex" :scrollable="true">
-        <TabPanel v-for="(tab, index) in openTabs" :key="tab.id">
-          <template #header>
-            <span class="tab-title">{{ tab.title }}</span>
-            <i
-              v-if="index !== 0"
-              class="pi pi-times ml-2 cursor-pointer"
-              @click.stop="handleClose(index)"
-            ></i>
-          </template>
-          <section class="tab-content-area">
-            <router-view v-slot="{ Component }">
-              <transition name="fade" mode="out-in">
-                <keep-alive>
-                  <component :is="Component" :key="$route.fullPath" />
-                </keep-alive>
-              </transition>
-            </router-view>
-          </section>
-        </TabPanel>
-      </TabView>
-
-      <div class="tab-utils">
-        <Button
-          icon="pi pi-times-circle"
-          class="p-button-text p-button-secondary utils-btn"
-          v-tooltip.bottom="'전체 닫기'"
-          @click="tabStore.closeAllTabs"
-        />
-      </div>
-    </div>
-  </div> -->
 </template>
 
 <style scoped>
-.p_tabview_nav {
-  height: 38px;
-}
-.tab-manager-root {
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+/* 1. 전체 컨테이너와 탭 바 높이 설정 */
+.p-tabs {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.tab-view-wrapper {
-  position: relative; /* 버튼 배치를 위한 기준점 */
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+/* 2. 탭 리스트 내부 (가로 스크롤 대응) */
+:deep(.p-tablist-content) {
+  /* margin: 0 10px; */
+  overflow-x: auto;
+  scroll-behavior: smooth;
 }
 
-.tab-utils {
-  position: absolute;
-  top: 0;
-  right: 0;
-  height: 38px; /* 헤더 높이와 반드시 일치시킴 */
+/* 3. 개별 탭 스타일 */
+:deep(.p-tab) {
+  height: 3rem;
+  min-width: 100px;
+  padding: 0 16px;
+  border: none;
+  background: transparent;
+  color: #64748b;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+/* 4. 활성화된 탭 (한화 오렌지) */
+:deep(.p-tab-active) {
+  color: #ff6600 !important;
+  font-weight: 700;
+}
+
+/* 5. 탭 하단 오렌지색 인디케이터 바 */
+:deep(.p-tablist-active-bar) {
+  background: #ff6600 !important;
+  height: 3px !important;
+}
+
+/* 6. 탭 내부 레이아웃 (라벨 + 닫기 아이콘) */
+.tab-label {
   display: flex;
   align-items: center;
-  padding: 0 8px;
-  background-color: #ffffff;
-  border-left: 1px solid #f1f5f9;
-  border-bottom: 1px solid #e5e7eb;
-  z-index: 10; /* 탭 버튼보다 위에 표시 */
+  gap: 8px;
+  white-space: nowrap;
 }
 
-.utils-btn {
-  width: 26px !important;
-  height: 26px !important;
+.close-icon {
+  font-size: 0.65rem;
+  color: #94a3b8;
+  padding: 3px;
+  border-radius: 50%;
+  transition: all 0.2s;
 }
 
+.close-icon:hover {
+  background-color: #ff6600;
+  color: #ffffff;
+}
+
+/* 7. 콘텐츠 영역 */
 .tab-content-area {
-  padding: 0;
-  height: 100%;
-}
+  padding: 1rem;
+  background-color: #f8fafc;
+  min-height: calc(100vh - 9rem);
 
-/* 탭 영역 전체 높이 조절 */
-:deep(.p-tabview) {
   display: flex;
   flex-direction: column;
-  height: 100%;
-}
 
-:deep(.p-tabview-panels) {
-  flex: 1;
-  overflow-y: auto;
+  box-sizing: border-box;
+
+  overflow: hidden; /* 전역 스크롤 방지 */
 }
 </style>
