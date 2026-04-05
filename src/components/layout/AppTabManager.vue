@@ -4,6 +4,7 @@ import { useTabStore } from '@/stores/useTabStore';
 import { storeToRefs } from 'pinia';
 import { useRoute, useRouter } from 'vue-router';
 import { Tabs, TabList, Tab, ContextMenu } from 'primevue';
+import type { AppTab } from '@/types/layout';
 
 const tabStore = useTabStore();
 const route = useRoute();
@@ -44,7 +45,6 @@ const handleClose = (id: string) => {
 };
 
 const handleCloseAll = () => {
-  console.log('close all');
   tabStore.closeAllTabs();
 };
 
@@ -56,9 +56,15 @@ const handleChangedTab = (value: string | number) => {
 };
 
 const showContext = ref();
-const selectedTab = ref(null);
+const selectedTab = ref<AppTab | null>(null);
 const contextMenu = [
-  { label: '닫기', icon: 'pi pi-copy', command: () => handleClose(selectedTab?.value?.to) },
+  {
+    label: '닫기',
+    icon: 'pi pi-copy',
+    command: () => {
+      if (selectedTab.value) handleClose(selectedTab.value.to);
+    },
+  },
   { label: '모두닫기', icon: 'pi pi-file-edit', command: handleCloseAll },
 ];
 
@@ -70,7 +76,7 @@ const filteredContextMenu = computed(() => {
   });
 });
 
-const onRightClick = (event, tab) => {
+const onRightClick = (event: MouseEvent, tab: AppTab) => {
   selectedTab.value = tab;
   console.log(tab);
   showContext.value.show(event);
