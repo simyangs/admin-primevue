@@ -2,78 +2,57 @@
 import { computed } from 'vue';
 import DatePicker from 'primevue/datepicker';
 import { formatNumericToDateString } from '@/utils/formatter';
+import { stringToDate, toNumericStr } from '@/utils/date';
 interface DatePickerProps {
-  date?: string | string[] | null;
-  isRange?: boolean;
+  date?: string | null;
+  width?: string | number;
 }
 
 const props = withDefaults(defineProps<DatePickerProps>(), {
   date: null,
-  isRange: false,
+  width: '120px',
 });
 
 const emit = defineEmits(['update:modelValue']);
 
 const onInput = (event: Event) => {
-  if (props.isRange) return;
   const input = event.target as HTMLInputElement;
   input.value = formatNumericToDateString(input.value);
-};
-
-const stringToDate = (str: string | null) => {
-  if (!str) return null;
-  str = str.replace(/[^0-9]/g, '');
-  if (str.length !== 8) return null;
-
-  const y = str.substring(0, 4);
-  const m = str.substring(4, 6);
-  const d = str.substring(6, 8);
-
-  return new Date(`${y}-${m}-${d}`);
-};
-
-const toNumericStr = (d: Date) => {
-  if (!d) return '';
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const day = String(d.getDate()).padStart(2, '0');
-  return `${year}${month}${day}`;
 };
 
 const internalValue = computed({
   get: () => {
     console.log(props.date);
     if (!props.date) return null;
-    if (Array.isArray(props.date)) {
-      console.log(props.date.map((v) => stringToDate(v)));
-      return props.date.map((v) => stringToDate(v));
-    } else {
-      return stringToDate(props.date);
-    }
+
+    return stringToDate(props.date);
   },
-  set: (val: Date | Date[] | null) => {
+  set: (val) => {
     if (!val) {
       emit('update:modelValue', null);
       return;
     }
 
-    if (Array.isArray(val)) {
-      emit('update:modelValue', val.map(toNumericStr));
-    } else {
-      emit('update:modelValue', toNumericStr(val));
-    }
+    emit('update:modelValue', toNumericStr(val));
   },
+});
+
+const withStyle = computed(() => {
+  if (!props.width) return '';
+  return (
+    'width: ' + (typeof props.width === 'number' ? props.width + 'px' : props.width) + ' !important'
+  );
 });
 </script>
 
 <template>
   <DatePicker
     v-model="internalValue"
-    :selectionMode="isRange ? 'range' : 'single'"
     :manualInput="false"
     showIcon
     showButtonBar
     iconDisplay="input"
+    :style="withStyle"
     @input="onInput"
   />
 </template>

@@ -1,13 +1,11 @@
-import { reactive } from 'vue';
+import { ref } from 'vue';
 
-const layoutState = reactive({
-  staticMenuInactive: false,
-});
+const isSidebarCollapsed = ref(false);
 
 export function useLayout() {
   const toggleMenu = () => {
-    layoutState.staticMenuInactive = !layoutState.staticMenuInactive;
+    isSidebarCollapsed.value = !isSidebarCollapsed.value;
   };
 
-  return { layoutState, toggleMenu };
+  return { isSidebarCollapsed, toggleMenu };
 }

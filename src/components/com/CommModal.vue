@@ -17,77 +17,64 @@ const emit = defineEmits<{
 }>();
 
 const close = () => emit('update:visible', false);
+const handleCallback = (obj: T) => {
+  emit('callback', obj);
+  close();
+};
 </script>
 
 <template>
-  <Dialog
-    :visible="visible"
-    @update:visible="(val: boolean) => emit('update:visible', val)"
-    :header="header"
-    :modal="true"
-    class="hw-modal"
-    :draggable="false"
-    :style="{ width: width || '520px' }"
-  >
-    <template #header>
-      <div class="cmm-modal-header">
-        <div class="title">
+  <div class="modal-container">
+    <Dialog
+      :visible="visible"
+      @update:visible="(val: boolean) => emit('update:visible', val)"
+      :header="header"
+      :modal="true"
+      :draggable="true"
+      :style="{ width: width || '520px' }"
+    >
+      <template #header>
+        <div class="p-dialog-title">
           {{ header }}
         </div>
-      </div>
-    </template>
+      </template>
 
-    <div class="modal-body-content" autofocus>
-      <component
-        v-if="component"
-        :is="component"
-        v-bind="data"
-        @close="close"
-        @callback="(obj: T) => emit('callback', obj)"
-      />
-    </div>
-  </Dialog>
+      <div class="modal-body-content" autofocus>
+        <component
+          v-if="component"
+          :is="component"
+          v-bind="data"
+          @close="close"
+          @callback="handleCallback"
+        />
+        <slot v-else />
+      </div>
+    </Dialog>
+  </div>
 </template>
 
 <style scoped>
-:deep(.p-dialog) {
-  font-size: 14px;
-  border-radius: 4px; /* 대시보드 이미지처럼 각진 느낌을 살린 미세한 라운드 */
+.modal-container .p-dialog {
+  border-radius: 8px !important;
+  overflow: hidden;
   box-shadow:
-    0 20px 25px -5px rgba(0, 0, 0, 0.1),
-    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    0 20px 25px -5px rgb(0 0 0 / 0.1),
+    0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
 }
-
-:deep(.p-dialog-header) {
-  padding: 1.5rem 2rem 1rem 2rem;
-
-  background: #fff;
+.modal-container .p-dialog-header {
+  background-color: var(--hv-dark) !important;
+  color: white !important;
+  padding: 1rem 1.5rem !important;
 }
-
-.modal-header-container {
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+.p-dialog-title {
+  font-size: 1.1rem !important;
+  font-weight: 700 !important;
 }
-
-.modal-title {
-  font-size: 1.1rem; /* 14px보다 살짝 큰 15~16px 느낌 */
-  font-weight: 400;
-  color: var(--p-surface-900);
-  margin: 0;
+.p-dialog-header-icons .p-dialog-header-icon {
+  color: white !important;
+  transition: background-color 0.2s;
 }
-
-.title-underline {
-  width: 30px;
-  height: 2px;
-  background: var(--p-primary-500); /* 한화 오렌지 */
-}
-
-:deep(.p-dialog-content) {
-  padding: 0;
-}
-
-:deep(.p-dialog-header-icons) {
-  padding-top: 1rem;
+.p-dialog-header-icons .p-dialog-header-icon:hover {
+  background-color: rgba(255, 255, 255, 0.1) !important;
 }
 </style>

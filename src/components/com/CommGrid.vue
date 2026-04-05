@@ -1,6 +1,10 @@
 <script setup lang="ts" generic="T extends Record<string, any>">
 import { ref, computed } from 'vue';
-import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
+import DataTable, {
+  type DataTablePageEvent,
+  type DataTableRowDoubleClickEvent,
+  type DataTableSortEvent,
+} from 'primevue/datatable';
 import MultiSelect from 'primevue/multiselect';
 import Column from 'primevue/column';
 import { formatNumber } from '@/utils/formatter';
@@ -23,6 +27,7 @@ const props = withDefaults(
     scrollable?: boolean;
     height?: string;
     columnFilter?: boolean;
+    onClick?: (event: DataTableRowDoubleClickEvent) => void;
     onPage?: (event: DataTablePageEvent) => void;
     onSort?: (event: DataTableSortEvent) => void;
 
@@ -36,7 +41,7 @@ const props = withDefaults(
     lazy: false,
     totalRecords: 0,
     scrollable: true,
-    height: '450px',
+    // height: '450px',
     columnFilter: true,
   },
 );
@@ -67,11 +72,16 @@ const tableProps = computed(() => {
   const scrolling = props.scrollable
     ? {
         scrollable: true,
-        scrollHeight: props.height || '450px',
+        scrollHeight: props.height || '500px',
       }
     : {};
 
-  return { ...base, ...pagination, ...scrolling };
+  const handleClick = props.onClick
+    ? {
+        onRowDblclick: props.onClick,
+      }
+    : {};
+  return { ...base, ...pagination, ...scrolling, ...handleClick };
 });
 
 const columnProps = (field: string) => {
@@ -100,8 +110,8 @@ console.log(selectedColumns.value);
   <div class="cmm-datatable">
     <DataTable v-bind="tableProps">
       <template #header>
-        <div class="cmm-datatable-header">
-          <div>
+        <div class="flex justify-between items-center flex-shrink-0">
+          <div class="flex items-center space-x-3">
             <MultiSelect
               class="column-filter"
               :modelValue="selectedColumns"
@@ -111,18 +121,16 @@ console.log(selectedColumns.value);
               :maxSelectedLabels="0"
             >
               <template #dropdownicon>
-                <div class="flex">
+                <div class="flex items-center">
                   <i class="pi pi-filter" />
                   <span class="ml-2">COLUMNS</span>
                 </div>
               </template>
             </MultiSelect>
           </div>
-          <div>
-            <span
-              >전체 {{ paginator ? formatNumber(totalRecords) : formatNumber(data.length) }}건</span
-            >
-          </div>
+          <span class="font-medium text-gray-500"
+            >전체 {{ paginator ? formatNumber(totalRecords) : formatNumber(data.length) }}건</span
+          >
         </div>
       </template>
       <Column

@@ -1,57 +1,22 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import DataTable, { type DataTablePageEvent, type DataTableSortEvent } from 'primevue/datatable';
-import MultiSelect from 'primevue/multiselect';
-
-import Column from 'primevue/column';
-import Button from 'primevue/button';
-
-interface Product {
-  id: number;
-  name: string;
-  category: string;
-  quantity: number;
-}
-
+<script setup lang="ts" generic="T extends Record<string, any>">
+import { ref, onMounted, shallowRef, reactive } from 'vue';
+import type { DataTablePageEvent, DataTableRowDoubleClickEvent } from 'primevue/datatable';
+import CommGrid from '@/components/com/CommGrid.vue';
+import CommModal from '@/components/com/CommModal.vue';
+import CommDrawer from '@/components/com/CommDrawer.vue';
+import CommSearchPanel from '@/components/com/CommSearchPanel.vue';
+import CommDatePicker from '@/components/com/CommDatePicker.vue';
+import SMP_3 from '@/views/sample/SMP_3.vue';
+import type { Product } from '@/types/sample';
+import { Button, InputText, Select } from 'primevue';
+import CommInputGroup from '@/components/com/CommInputGroup.vue';
+import CommRangeDatePicker from '@/components/com/CommRangeDatePicker.vue';
 interface SelectInfo {
   page: number;
   rows: number;
   sortField: string | null;
   sortOrder: number | null;
 }
-
-const columns = ref([
-  { field: 'name', header: 'Name' },
-  { field: 'category', header: 'Category' },
-  { field: 'quantity', header: 'Quantity' },
-]);
-const selectedColumns = ref(columns.value);
-
-const products = ref<Product[]>([]);
-const selectInfo = ref<SelectInfo>({
-  page: 0,
-  rows: 10,
-  sortField: null,
-  sortOrder: null,
-});
-
-const totalCount = ref<number>(0);
-const onPage = (event: DataTablePageEvent) => {
-  selectInfo.value.page = event.page;
-  selectInfo.value.rows = event.rows;
-  selectProducts();
-};
-
-const onSort = (event: DataTableSortEvent) => {
-  selectInfo.value.sortField = event.sortField as string;
-  selectInfo.value.sortOrder = event.sortOrder!;
-  selectProducts();
-};
-
-const onToggle = (val: any) => {
-  selectedColumns.value = columns.value.filter((col) => val.includes(col));
-};
-
 const selectProducts = () => {
   const total = 1345;
   const list = [];
@@ -71,94 +36,174 @@ const selectProducts = () => {
   totalCount.value = total;
 };
 
-const copyToClipboard = async (text: string) => {
-  try {
-    await navigator.clipboard.writeText(text);
-    // 성공 시 토스트 알림
-  } catch (err) {}
+const products = ref<Product[]>([]);
+const selectInfo = ref<SelectInfo>({
+  page: 0,
+  rows: 10,
+  sortField: null,
+  sortOrder: null,
+});
+
+const totalCount = ref<number>(0);
+
+// const isOpenDetail = ref(false);
+const isOpenModal = ref(false);
+const selectedItem = ref<Product | null>(null);
+
+const modalComp = shallowRef(SMP_3);
+// const drawerComp = shallowRef(SMP_P1);
+
+const onPage = (event: DataTablePageEvent) => {
+  selectInfo.value.page = event.page;
+  selectInfo.value.rows = event.rows;
+  selectProducts();
 };
 
+const openDetailModal = (data: Product) => {
+  selectedItem.value = data;
+  isOpenModal.value = true;
+};
+
+const callbackDetail = (data: Record<string, unknown>) => {
+  console.log('callback', data);
+};
+
+const onDblClick = (data: DataTableRowDoubleClickEvent) => {
+  console.log(data.index, data.data);
+  openDetailModal(data.data);
+};
 onMounted(() => {
   selectProducts();
 });
+
+const columns = [
+  { field: 'id', header: 'ID', visible: true, width: '50px' },
+  {
+    field: 'name',
+    header: '이름',
+    visible: true,
+    width: '150px',
+    sortable: true,
+  },
+  {
+    field: 'category',
+    header: '카테고리',
+    visible: true,
+  },
+  { field: 'quantity', header: '수량', visible: true },
+];
+
+const name = ref<string>('');
+const date = ref('20260401');
+const codeInfo = reactive({
+  code: '',
+  name: '',
+});
+
+const searchDs = ref({ code: '', date: '', startDate: undefined, endDate: undefined });
+
+const isVisibleModal3 = ref(false);
+const selectedCity = ref();
+const cities = ref([
+  { name: 'New York', code: 'NY' },
+  { name: 'Rome', code: 'RM' },
+  { name: 'London', code: 'LDN' },
+  { name: 'Istanbul', code: 'IST' },
+  { name: 'Paris', code: 'PRS' },
+]);
+const handleInputGroup3 = () => {
+  isVisibleModal3.value = true;
+};
+const handleCallbackModal3 = () => {
+  codeInfo.name = selectedCity.value.name;
+  isVisibleModal3.value = false;
+};
 </script>
 <template>
-  <div class="hw_data_table">
-    <DataTable
-      :value="products"
-      scrollable
-      scrollHeight="450px"
-      removableSort
-      lazy
-      paginator
-      :rows="10"
-      :rowsPerPageOptions="[10, 20, 50, 100, 500]"
+  <CommSearchPanel>
+    <div class="form-group">
+      <label>이름</label>
+      <InputText v-model="name" />
+    </div>
+    <div class="form-group">
+      <label>조회일자</label>
+      <CommDatePicker :date="date" @update:modelValue="(val: any) => console.log(val)" />
+    </div>
+    <div class="form-group">
+      <label>조회기간</label>
+      <CommRangeDatePicker
+        v-model:startValue="searchDs.startDate"
+        v-model:endValue="searchDs.endDate"
+        @update:startValue="console.log(searchDs)"
+        @update:endValue="console.log(searchDs)"
+      />
+    </div>
+    <div class="form-group">
+      <label>코드</label>
+      <CommInputGroup
+        :inputValue="codeInfo.name"
+        :readonly="true"
+        width="150px"
+        @click="handleInputGroup3"
+      />
+    </div>
+    <div class="form-group">
+      <label>이름</label>
+      <InputText v-model="name" />
+    </div>
+    <div class="form-group">
+      <label>조회일자</label>
+      <CommDatePicker :date="date" @update:modelValue="(val: any) => console.log(val)" />
+    </div>
+    <template #actions>
+      <Button class="btn btn-outline" label="초기화" />
+      <Button class="btn btn-dark" label="조회" />
+    </template>
+  </CommSearchPanel>
+  <section class="data-section">
+    <CommGrid
+      :paginator="true"
+      :data="products"
+      :columns="columns"
+      :onPage="onPage"
       :totalRecords="totalCount"
-      @page="onPage"
-      @sort="onSort"
+      :onClick="onDblClick"
     >
-      <template #header>
-        <div style="text-align: left">
-          <MultiSelect
-            class="custom-multiselect-button"
-            :modelValue="selectedColumns"
-            :options="columns"
-            optionLabel="header"
-            @update:modelValue="onToggle"
-            :maxSelectedLabels="0"
-          >
-            <template #dropdownicon>
-              <div>
-                <i class="pi pi-filter">&nbsp;COLUMNS</i>
-              </div>
-            </template>
-          </MultiSelect>
-        </div>
+      <template #name="slotProps">
+        <span>#{{ slotProps.data.name }}</span>
       </template>
-      <Column field="id" header="ID" />
-      <Column
-        v-for="(col, index) of selectedColumns"
-        :field="col.field"
-        :header="col.header"
-        :key="col.field + '_' + index"
-        sortable
-        copyable="true"
-      >
-        <template #body="slotProps">
-          <div class="flex items-center gap-2">
-            <span>{{ slotProps.data[col.field] }}</span>
-            <Button
-              v-if="slotProps.column.props.copyable"
-              icon="pi pi-copy"
-              class="p-button-text p-button-sm p-0 w-8 h-8"
-              @click="copyToClipboard(slotProps.data[col.field])"
-              v-tooltip.top="'복사하기'"
-            />
-          </div>
-        </template>
-      </Column>
-    </DataTable>
-  </div>
+
+      <template #category="slotProps">
+        <span>##{{ slotProps.data.category }}</span>
+      </template>
+    </CommGrid>
+  </section>
+  <CommModal
+    v-if="selectedItem"
+    v-model:visible="isOpenModal"
+    header="상품상세"
+    :component="modalComp"
+    :data="selectedItem"
+    width="800px"
+    @callback="callbackDetail"
+  ></CommModal>
+  <!-- <CommDrawer
+    v-model:visible="isOpenDetail"
+    header="상세 정보"
+    :component="drawerComp"
+    :data="selectedItem || undefined"
+    mode="edit"
+    width="1024px"
+    @save="callbackDetail"
+  /> -->
+  <CommModal v-model:visible="isVisibleModal3" header="선택">
+    <Select
+      v-model="selectedCity"
+      :options="cities"
+      optionLabel="name"
+      placeholder="Select a City"
+      class="w-full md:w-56"
+    />
+    <Button class="btn btn-dark" label="선택" @click="handleCallbackModal3" />
+  </CommModal>
 </template>
-<style scoped>
-:deep(.custom-multiselect-button) {
-  border: none;
-  padding: 1rem 0.5rem;
-  color: white;
-  cursor: pointer;
-  width: auto; /* 고정 너비 해제 */
-  min-width: 0;
-  transition: background 0.2s;
-}
-
-:deep(.p-multiselect-dropdown) {
-  display: block;
-}
-
-:deep(.p-multiselect-label-container) {
-  display: none;
-}
-:deep(.p-multiselect) {
-  box-shadow: none;
-}
-</style>

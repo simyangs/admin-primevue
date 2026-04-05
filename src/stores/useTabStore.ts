@@ -43,8 +43,10 @@ export const useTabStore = defineStore('tabs', () => {
 
   // 모든 탭 닫기 (대시보드 제외)
   const closeAllTabs = (): void => {
-    openTabs.value = [{ title: '대시보드', to: dashboardTo }];
+    //openTabs.value = [{ title: '대시보드', to: dashboardTo }];
+    openTabs.value.splice(1);
     activeId.value = dashboardTo;
+    router.push(dashboardTo);
   };
   return { openTabs, activeId, addTab, removeTab, closeAllTabs };
 });

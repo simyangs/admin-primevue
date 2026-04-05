@@ -1,0 +1,15 @@
+:root {
+  --hv-primary: #ff6600; /* 한화 오렌지 */
+  --hv-primary-rgb: 243, 115, 33;
+  --hv-dark: #373331; /* 사이드바 등 어두운 배경 */
+  --hv-bg-main: #f1f4f9; /* 시스템 전체 배경 */
+  --hv-bg-content: #ffffff; /* 업무 영역 배경 */
+  --hv-border: #e2e8f0; /* 섹션 구분선 */
+  --hv-text-base: #1e293b; /* 메인 텍스트 */
+  --hv-text-muted: #64748b; /* 보조 텍스트 */
+  --hv-accent-blue: #2563eb; /* 상호작용 포인트 블루 */
+  --hv-sidebar-width: 224px; /* 사이드바 기본 폭 */
+  --hv-sidebar-collapsed: 0; /* 사이드바 축소 폭 */
+  --hv-header-height: 48px; /* 탑바 높이 */
+  --hv-tab-height: 32px; /* 멀티탭 높이 */
+}

@@ -21,85 +21,30 @@ console.log(props);
 </script>
 
 <template>
-  <div class="detail-container">
-    <div class="info-table">
-      <div class="info-row">
-        <div class="info-label">ID</div>
-        <div class="info-value">{{ id }}</div>
+  <div>
+    <div class="form-section-title">타이틀</div>
+    <table class="form-table">
+      <tr>
+        <th>ID</th>
+        <td>{{ id }}</td>
+      </tr>
+      <tr>
+        <th>이름</th>
+        <td>{{ name }}</td>
+      </tr>
+      <tr>
+        <th>카테고리</th>
+        <td>{{ category }}</td>
+      </tr>
+      <tr>
+        <th>수량</th>
+        <td>{{ quantity }}</td>
+      </tr>
+    </table>
+    <div class="flex justify-end mt-6">
+      <div class="flex gap-2">
+        <Button class="btn" label="확인" @click="callback" />
       </div>
-      <div class="info-row">
-        <div class="info-label">이름</div>
-        <div class="info-value">{{ name }}</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">카테고리</div>
-        <div class="info-value">{{ category }}</div>
-      </div>
-      <div class="info-row">
-        <div class="info-label">수량</div>
-        <div class="info-value font-semibold text-orange-500">
-          {{ quantity }}
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-actions">
-      <Button
-        label="취소"
-        severity="secondary"
-        variant="outlined"
-        @click="$emit('close')"
-        class="action-btn"
-      />
-      <Button label="수정하기" @click="callback" class="action-btn primary-btn" />
     </div>
   </div>
 </template>
-
-<style scoped>
-.info-table {
-  /* 이미지의 테이블 헤더 느낌을 본떠 상단 라인 강조 */
-  border-top: 1px solid var(--p-surface-300);
-  margin-bottom: 2rem;
-}
-
-.info-row {
-  display: flex;
-  border-bottom: 1px solid var(--p-surface-200);
-}
-
-.info-label {
-  flex: 0 0 120px;
-  background: var(--p-surface-50);
-  padding: 0.8rem 1rem;
-  font-weight: 500;
-  color: var(--p-surface-600);
-  display: flex;
-  align-items: center;
-}
-
-.info-value {
-  flex: 1;
-  padding: 0.8rem 1rem;
-  color: var(--p-surface-900);
-  display: flex;
-  align-items: center;
-}
-
-.footer-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 0.5rem;
-}
-
-.action-btn {
-  font-size: 14px;
-  padding: 0.5rem 1.5rem;
-}
-
-.primary-btn {
-  /* 한화 오렌지 적용 */
-  background: var(--p-primary-500);
-  border: none;
-}
-</style>

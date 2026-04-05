@@ -1,193 +1,109 @@
-<script setup lang="ts" generic="T extends Record<string, any>">
-import { ref, onMounted, shallowRef, reactive } from 'vue';
-import type { DataTablePageEvent } from 'primevue/datatable';
-import CommTable from '@/components/com/CommTable.vue';
-import CommModal from '@/components/com/CommModal.vue';
-import CommDrawer from '@/components/com/CommDrawer.vue';
-import CommSearchPanel from '@/components/com/CommSearchPanel.vue';
-import CommDatePicker from '@/components/com/CommDatePicker.vue';
-import SMP_3 from '@/views/sample/SMP_3.vue';
-import type { Product } from '@/types/sample';
-import SMP_P1 from './popup/SMP_P1.vue';
-import { Button, InputGroup, InputText, InputGroupAddon } from 'primevue';
-interface SelectInfo {
-  page: number;
-  rows: number;
-  sortField: string | null;
-  sortOrder: number | null;
-}
-const selectProducts = () => {
-  const total = 1345;
-  const list = [];
+<script setup lang="ts">
+import CommCheckbox from '@/components/com/CommCheckbox.vue';
+import CommInputGroup from '@/components/com/CommInputGroup.vue';
+import CommRadio from '@/components/com/CommRadio.vue';
+import CommRangeDatePicker from '@/components/com/CommRangeDatePicker.vue';
+import { Button, InputText, Select } from 'primevue';
+import { ref } from 'vue';
 
-  const start = selectInfo.value.page * selectInfo.value.rows + 1;
-  const end = Math.min(start + selectInfo.value.rows, total);
-  for (let i = start; i < end; i++) {
-    list.push({
-      id: i,
-      name: 'product_' + i,
-      category: 'aaa',
-      quantity: i,
-    });
-  }
-  if (selectInfo.value.sortOrder === -1) list.reverse();
-  products.value = list;
-  totalCount.value = total;
-};
-
-const products = ref<Product[]>([]);
-const selectInfo = ref<SelectInfo>({
-  page: 0,
-  rows: 10,
-  sortField: null,
-  sortOrder: null,
+const detail = ref({
+  cntrCd: 'L2408-00123',
+  prdCd: 'L1234',
+  prdNm: '(무)한화 수호천사 건강보험',
+  cntrStCd: '01',
+  cntrStdt: '20260101',
+  cntrEddt: '20261231',
+  rpPrDtCd: '03',
+  posts: [],
 });
+const statusList = ref([
+  { code: '01', name: '정상' },
+  { code: '02', name: '실효' },
+  { code: '03', name: '해지' },
+]);
+const rpPrDtList = ref([
+  { code: '', name: '- 선택 -' },
+  { code: '01', name: '월납' },
+  { code: '02', name: '연납' },
+  { code: '03', name: '일시납' },
+]);
 
-const totalCount = ref<number>(0);
-
-const isOpenDetail = ref(false);
-const isOpenModal = ref(false);
-const selectedItem = ref<Product | null>(null);
-
-const modalComp = shallowRef(SMP_3);
-const drawerComp = shallowRef(SMP_P1);
-
-const onPage = (event: DataTablePageEvent) => {
-  selectInfo.value.page = event.page;
-  selectInfo.value.rows = event.rows;
-  selectProducts();
-};
-
-const openDetail = (data: Product) => {
-  selectedItem.value = data;
-  isOpenDetail.value = true;
-};
-
-const openDetailModal = (data: Product) => {
-  selectedItem.value = data;
-  isOpenModal.value = true;
-};
-
-const callbackDetail = (data: Record<string, unknown>) => {
-  console.log('callback', data);
-  isOpenDetail.value = false;
-  isOpenModal.value = false;
-};
-onMounted(() => {
-  selectProducts();
-});
-
-const columns = [
-  { field: 'id', header: 'ID', visible: true, width: '50px' },
-  {
-    field: 'name',
-    header: '이름',
-    visible: true,
-    width: '150px',
-    sortable: true,
-    onCellClick: (data: Product) => {
-      openDetail(data);
-    },
-  },
-  {
-    field: 'category',
-    header: '카테고리',
-    visible: true,
-    onCellClick: (data: Product) => {
-      openDetailModal(data);
-    },
-  },
-  { field: 'quantity', header: '수량', visible: true },
-];
-
-const code = ref<string>('');
-const name = ref<string>('');
-//const date = ref<Date | Date[] | null>([new Date('2026-04-01'), new Date('2026-04-02')]);
-const rangeDate = ref<string | string[] | null>(['20260401', '20260402']);
-const date = ref<string | string[] | null>('20260401');
-
-const codeInfo = reactive({
-  code: '',
-  name: '',
-});
-
-const handleCode = () => {
-  codeInfo.code = 'A123';
-  codeInfo.name = '테스트';
-};
-
-const searchDs = ref({ code: '', date: '' });
+const postList = ref([
+  { code: '01', name: '자택' },
+  { code: '02', name: '직장' },
+]);
 </script>
 <template>
-  <CommSearchPanel>
-    <div class="form-group">
-      <label>코드</label>
-      <InputGroup class="!w-[150px]">
-        <InputText
-          readonly="true"
-          :modelValue="codeInfo.name"
-          @update:modelValue="() => (searchDs.code = codeInfo.code)"
-        />
-        <InputGroupAddon>
-          <Button icon="pi pi-search" severity="secondary" variant="text" @click="handleCode" />
-        </InputGroupAddon>
-      </InputGroup>
+  <div class="detail-section">
+    <div class="form-section-title">기본 계약 정보</div>
+    <table class="form-table">
+      <tbody>
+        <tr>
+          <th class="required">증권번호</th>
+          <td>
+            <InputText v-model:modelValue="detail.cntrCd" />
+          </td>
+          <th class="required">상품명</th>
+          <td>
+            <CommInputGroup :inputValue="detail.prdNm" :readonly="true" width="300px" />
+          </td>
+        </tr>
+        <tr>
+          <th class="required">계약상태</th>
+          <td>
+            <div class="flex justify-start">
+              <CommRadio
+                :dataList="statusList"
+                v-model:modelValue="detail.cntrStCd"
+                inputLabel="name"
+                inputValue="code"
+                inputName="status"
+                @update="(val) => console.log(detail)"
+              />
+            </div>
+          </td>
+          <th class="required">보험기간</th>
+          <td>
+            <div class="flex items-center space-x-2">
+              <CommRangeDatePicker
+                v-model:startValue="detail.cntrStdt"
+                v-model:endValue="detail.cntrEddt"
+                @update:startValue="console.log(detail)"
+                @update:endValue="console.log(detail)"
+              />
+            </div>
+          </td>
+        </tr>
+        <tr>
+          <th>납입주기</th>
+          <td>
+            <Select
+              v-model="detail.rpPrDtCd"
+              :options="rpPrDtList"
+              optionLabel="name"
+              optionValue="code"
+              @update:modelValue="console.log(detail)"
+            />
+          </td>
+          <th>우편물 수령처</th>
+          <td>
+            <CommCheckbox
+              :dataList="postList"
+              v-model:modelValue="detail.posts"
+              inputLabel="name"
+              inputValue="code"
+              inputName="status"
+              @update="(val) => console.log(detail)"
+            />
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="flex justify-between mt-6">
+      <div class="flex gap-2"></div>
+      <div class="flex gap-2">
+        <Button class="btn" label="저장" @click="console.log(detail)" />
+      </div>
     </div>
-    <div class="form-group">
-      <label>이름</label>
-      <InputText v-model="name" />
-    </div>
-    <div class="form-group">
-      <label>조회일자</label>
-      <CommDatePicker
-        class="w-[120px]"
-        :date="date"
-        @update:modelValue="(val: any) => console.log(val)"
-      />
-    </div>
-    <div class="form-group">
-      <label>조회기간</label>
-      <CommDatePicker
-        :date="rangeDate"
-        :isRange="true"
-        @update:modelValue="(val: any) => console.log(val)"
-      />
-    </div>
-    <template #actions>
-      <Button severity="primary" label="조회" />
-    </template>
-  </CommSearchPanel>
-  <CommTable
-    :paginator="true"
-    :data="products"
-    :columns="columns"
-    :onPage="onPage"
-    :totalRecords="totalCount"
-  >
-    <template #name="slotProps">
-      <span>#{{ slotProps.data.name }}</span>
-    </template>
-
-    <template #category="slotProps">
-      <span>##{{ slotProps.data.category }}</span>
-    </template>
-  </CommTable>
-  <CommModal
-    v-if="selectedItem"
-    v-model:visible="isOpenModal"
-    header="상품상세"
-    :component="modalComp"
-    :data="selectedItem"
-    width="800px"
-    @callback="callbackDetail"
-  ></CommModal>
-  <CommDrawer
-    v-model:visible="isOpenDetail"
-    header="상세 정보"
-    :component="drawerComp"
-    :data="selectedItem || undefined"
-    mode="edit"
-    width="1024px"
-    @save="callbackDetail"
-  />
+  </div>
 </template>

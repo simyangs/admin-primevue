@@ -11,21 +11,15 @@ import AppTabManager from './AppTabManager.vue';
  * 2. Right Top: Header (로그인 정보 등)
  * 3. Right Bottom: AppTabManager (멀티탭 메인 화면)
  */
-const { layoutState } = useLayout();
-const containerClass = computed(() => {
-  return {
-    'layout-static-inactive': layoutState.staticMenuInactive,
-  };
-});
 </script>
 
 <template>
-  <div class="layout-wrapper layout-static" :class="containerClass">
+  <div class="main-layout">
     <AppTopbar />
-    <AppSidebar />
+    <div class="flex flex-1 overflow-hidden">
+      <AppSidebar />
 
-    <div class="layout-main-container">
-      <main class="layout-content">
+      <main class="flex-1 flex flex-col min-w-0 overflow-hidden">
         <AppTabManager />
       </main>
     </div>

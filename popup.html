@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>한화손해보험 상세 모달 팝업</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue 3 & PrimeVue v4 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/primevue/core/core.min.js"></script>
+    <script src="https://unpkg.com/@primevue/themes/umd/aura.min.js"></script>
+    <!-- PrimeIcons -->
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+      :root {
+        --hv-primary: #f37321;
+        --hv-primary-rgb: 243, 115, 33;
+        --hv-dark: #231f20;
+        --hv-bg-main: #f1f4f9;
+        --hv-bg-content: #ffffff;
+        --hv-border: #e2e8f0;
+        --hv-text-base: #1e293b;
+        --hv-text-muted: #64748b;
+      }
+
+      html,
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: var(--hv-bg-main);
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        color: var(--hv-text-base);
+      }
+
+      /* --- Modal (Dialog) Custom Styling --- */
+      .p-dialog {
+        border-radius: 8px !important;
+        overflow: hidden;
+        box-shadow:
+          0 20px 25px -5px rgb(0 0 0 / 0.1),
+          0 8px 10px -6px rgb(0 0 0 / 0.1) !important;
+      }
+      .p-dialog-header {
+        background-color: var(--hv-dark) !important;
+        color: white !important;
+        padding: 1rem 1.5rem !important;
+      }
+      .p-dialog-title {
+        font-size: 1.1rem !important;
+        font-weight: 700 !important;
+      }
+      .p-dialog-header-icons .p-dialog-header-icon {
+        color: white !important;
+        transition: background-color 0.2s;
+      }
+      .p-dialog-header-icons .p-dialog-header-icon:hover {
+        background-color: rgba(255, 255, 255, 0.1) !important;
+      }
+      .p-dialog-content {
+        padding: 0 !important;
+      }
+      .p-dialog-footer {
+        padding: 1rem 1.5rem !important;
+        border-top: 1px solid var(--hv-border) !important;
+        background-color: #f8fafc !important;
+      }
+
+      /* --- Form Table inside Modal --- */
+      .modal-form-table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      .modal-form-table th {
+        width: 120px;
+        background-color: #f8fafc;
+        color: #475569;
+        font-weight: 700;
+        text-align: left;
+        padding: 10px 14px;
+        border-bottom: 1px solid var(--hv-border);
+        border-right: 1px solid var(--hv-border);
+        font-size: 13px;
+      }
+      .modal-form-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--hv-border);
+        background-color: white;
+        font-size: 13px;
+      }
+      .required::after {
+        content: '*';
+        color: var(--hv-primary);
+        margin-left: 4px;
+      }
+
+      /* Button & Input */
+      .btn-base {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 14px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 4.5rem;
+      }
+      .btn-primary {
+        background-color: var(--hv-primary);
+        color: white;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #d65d14;
+      }
+      .btn-outline {
+        background-color: white;
+        border: 1px solid var(--hv-border);
+        color: var(--hv-text-base);
+      }
+      .btn-outline:hover {
+        background-color: #f8fafc;
+      }
+
+      .p-inputtext {
+        padding: 5px 10px !important;
+        font-size: 13px !important;
+        border-color: var(--hv-border) !important;
+        width: 100%;
+      }
+      .p-inputtext:focus {
+        border-color: var(--hv-primary) !important;
+        box-shadow: none !important;
+      }
+
+      .section-sub-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--hv-primary);
+        margin: 1.5rem 1.5rem 0.5rem 1.5rem;
+        display: flex;
+        align-items: center;
+      }
+      .section-sub-title::before {
+        content: '';
+        display: inline-block;
+        width: 3px;
+        height: 14px;
+        background: var(--hv-primary);
+        margin-right: 8px;
+      }
+    </style>
+  </head>
+  <body class="p-10 flex flex-col items-center justify-center min-h-screen">
+    <div id="app">
+      <!-- Trigger Button for Prototype Demo -->
+      <div class="text-center space-y-4">
+        <div class="bg-white p-8 rounded-xl shadow-lg border border-gray-200">
+          <div class="mb-6">
+            <div
+              class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-4"
+            >
+              <i
+                class="pi pi-external-link text-hv-primary text-xl"
+                style="color: var(--hv-primary)"
+              ></i>
+            </div>
+            <h1 class="text-xl font-bold text-gray-800">모달 팝업 프로토타입</h1>
+            <p class="text-gray-500 text-sm mt-2">버튼을 클릭하여 상세 정보 팝업을 확인하세요.</p>
+          </div>
+          <button
+            @click="visible = true"
+            class="btn-base btn-primary px-8 py-3 text-base shadow-orange-200 shadow-lg"
+          >
+            <i class="pi pi-search mr-2"></i> 계약 상세 정보 조회
+          </button>
+        </div>
+      </div>
+
+      <!-- PrimeVue Dialog Component -->
+      <p-dialog
+        v-model:visible="visible"
+        modal
+        header="계약 상세 정보 수정"
+        :style="{ width: '800px' }"
+        :draggable="true"
+      >
+        <!-- Modal Body Content -->
+        <div class="pb-6">
+          <div class="section-sub-title">증권 기본 정보</div>
+          <div class="px-6">
+            <table class="modal-form-table border-t-2 border-gray-700">
+              <tbody>
+                <tr>
+                  <th class="required">증권번호</th>
+                  <td>
+                    <input
+                      type="text"
+                      class="p-inputtext bg-gray-50"
+                      value="L2408-00123"
+                      readonly
+                    />
+                  </td>
+                  <th class="required">계약일자</th>
+                  <td><input type="date" class="p-inputtext" value="2024-08-15" /></td>
+                </tr>
+                <tr>
+                  <th class="required">상품명</th>
+                  <td colspan="3">
+                    <div class="flex space-x-1">
+                      <input
+                        type="text"
+                        class="p-inputtext flex-1"
+                        value="(무)한화 수호천사 건강보험"
+                      />
+                      <button class="px-3 border rounded bg-gray-50 hover:bg-gray-100">
+                        <i class="pi pi-search text-xs"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>납입방법</th>
+                  <td>
+                    <select class="p-inputtext bg-white">
+                      <option>자동이체</option>
+                      <option>신용카드</option>
+                      <option>지로</option>
+                    </select>
+                  </td>
+                  <th>납입기관</th>
+                  <td><input type="text" class="p-inputtext" value="한화은행" /></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="section-sub-title">고객 인적 사항</div>
+          <div class="px-6">
+            <table class="modal-form-table border-t-2 border-gray-700">
+              <tbody>
+                <tr>
+                  <th class="required">계약자</th>
+                  <td><input type="text" class="p-inputtext" value="홍길동" /></td>
+                  <th class="required">관계</th>
+                  <td>
+                    <select class="p-inputtext bg-white">
+                      <option>본인</option>
+                      <option>배우자</option>
+                      <option>자녀</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="required">연락처</th>
+                  <td><input type="text" class="p-inputtext" value="010-1234-5678" /></td>
+                  <th>이메일</th>
+                  <td><input type="text" class="p-inputtext" value="hong@email.com" /></td>
+                </tr>
+                <tr>
+                  <th>주소</th>
+                  <td colspan="3">
+                    <div class="flex space-x-1 mb-1">
+                      <input type="text" class="p-inputtext w-24" value="06232" />
+                      <button class="px-3 border rounded bg-gray-50 text-xs font-bold">검색</button>
+                    </div>
+                    <input
+                      type="text"
+                      class="p-inputtext"
+                      value="서울특별시 강남구 테헤란로 123, 15층"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Alert/Notice inside modal -->
+          <div
+            class="mx-6 mt-6 p-3 bg-orange-50 border border-orange-100 rounded-md flex items-start"
+          >
+            <i
+              class="pi pi-exclamation-circle text-hv-primary mt-0.5 mr-2"
+              style="color: var(--hv-primary)"
+            ></i>
+            <p class="text-xs text-orange-800 leading-relaxed">
+              상기 정보 수정 시 계약 유지 심사에 영향을 줄 수 있습니다. <br />
+              변경 사항을 최종 확인 후 저장 버튼을 클릭해 주세요.
+            </p>
+          </div>
+        </div>
+
+        <!-- Modal Footer Buttons -->
+        <template #footer>
+          <div class="flex justify-end space-x-2">
+            <button @click="visible = false" class="btn-base btn-outline px-6">닫기</button>
+            <button @click="saveData" class="btn-base btn-primary px-8 shadow-sm">
+              수정 내용 저장
+            </button>
+          </div>
+        </template>
+      </p-dialog>
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue;
+
+      const App = {
+        setup() {
+          const visible = ref(false);
+
+          const saveData = () => {
+            // 여기에 저장 로직 추가 가능
+            alert('성공적으로 저장되었습니다.');
+            visible.value = false;
+          };
+
+          return { visible, saveData };
+        },
+      };
+
+      const app = createApp(App);
+      app.use(PrimeVue.Config, {
+        theme: {
+          preset: PrimeVue.Themes.Aura,
+          options: {
+            cssLayer: {
+              name: 'primevue',
+              order: 'tailwind-base, primevue, tailwind-utilities',
+            },
+          },
+        },
+      });
+
+      // 컴포넌트 등록
+      app.component('p-dialog', PrimeVue.Dialog);
+
+      app.mount('#app');
+    </script>
+  </body>
+</html>

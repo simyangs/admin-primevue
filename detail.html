@@ -1,0 +1,541 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>한화손해보험 상세/등록 폼</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue 3 & PrimeVue v4 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/primevue/core/core.min.js"></script>
+    <script src="https://unpkg.com/@primevue/themes/umd/aura.min.js"></script>
+    <!-- PrimeIcons -->
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+      :root {
+        --hv-primary: #f37321;
+        --hv-primary-rgb: 243, 115, 33;
+        --hv-dark: #231f20;
+        --hv-bg-main: #f1f4f9;
+        --hv-bg-content: #ffffff;
+        --hv-border: #e2e8f0;
+        --hv-text-base: #1e293b;
+        --hv-text-muted: #64748b;
+        --hv-header-height: 48px;
+        --hv-tab-height: 36px;
+        --hv-sidebar-width: 224px;
+        --hv-sidebar-collapsed: 64px;
+      }
+
+      html,
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: var(--hv-bg-main);
+        margin: 0;
+        padding: 0;
+        font-size: 14px;
+        height: 100vh;
+        overflow: hidden;
+        color: var(--hv-text-base);
+      }
+
+      .main-layout {
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .sidebar {
+        background-color: var(--hv-dark);
+        color: #cbd5e1;
+        transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .sidebar.collapsed {
+        width: var(--hv-sidebar-collapsed);
+      }
+      .sidebar.expanded {
+        width: var(--hv-sidebar-width);
+      }
+
+      .menu-item {
+        display: flex;
+        align-items: center;
+        padding: 10px 16px;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+      .menu-item:hover {
+        color: white;
+        background-color: rgba(255, 255, 255, 0.05);
+      }
+      .menu-item.active {
+        color: var(--hv-primary);
+        font-weight: 700;
+      }
+
+      /* --- Form Table 핵심 스타일 --- */
+      .form-section-title {
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--hv-text-base);
+        padding-left: 10px;
+        border-left: 4px solid var(--hv-primary);
+        margin-bottom: 12px;
+        margin-top: 24px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .form-table {
+        width: 100%;
+        border-top: 2px solid #475569;
+        border-collapse: collapse;
+      }
+      .form-table th {
+        width: 140px;
+        background-color: #f8fafc;
+        color: #475569;
+        font-weight: 700;
+        text-align: left;
+        padding: 10px 16px;
+        border-bottom: 1px solid var(--hv-border);
+        border-right: 1px solid var(--hv-border);
+      }
+      .form-table td {
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--hv-border);
+        background-color: white;
+      }
+      .required::after {
+        content: '*';
+        color: var(--hv-primary);
+        margin-left: 4px;
+      }
+
+      /* PrimeVue Custom */
+      .p-tabs {
+        background: var(--hv-bg-content) !important;
+        border: none !important;
+      }
+      .p-tablist-tab-list {
+        border-bottom: 1px solid var(--hv-border) !important;
+        height: var(--hv-tab-height) !important;
+        background: white !important;
+        gap: 0 !important;
+      }
+      .p-tab {
+        font-size: 13px !important;
+        color: var(--hv-text-muted) !important;
+        border-bottom: 2px solid transparent !important;
+        transition: all 0.2s !important;
+        border-radius: 0 !important;
+        height: var(--hv-tab-height) !important;
+        min-height: auto !important;
+      }
+      .p-tab-selected {
+        color: var(--hv-primary) !important;
+        border-bottom-color: var(--hv-primary) !important;
+        background-color: rgba(var(--hv-primary-rgb), 0.05) !important;
+        font-weight: 700 !important;
+      }
+      .p-tab-ink-bar {
+        display: none !important;
+      }
+
+      .p-inputtext,
+      .p-select,
+      .p-datepicker {
+        padding: 5px 10px !important;
+        font-size: 13px !important;
+        border-color: var(--hv-border) !important;
+        width: 100%;
+      }
+      .p-inputtext:focus {
+        border-color: var(--hv-primary) !important;
+        box-shadow: none !important;
+      }
+
+      .btn-base {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 16px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 5rem;
+      }
+      .btn-primary {
+        background-color: var(--hv-primary);
+        color: white;
+        border: none;
+      }
+      .btn-primary:hover {
+        background-color: #d65d14;
+      }
+      .btn-outline {
+        background-color: white;
+        border: 1px solid var(--hv-border);
+        color: var(--hv-text-base);
+      }
+      .btn-outline:hover {
+        background-color: #f8fafc;
+      }
+
+      ::-webkit-scrollbar {
+        width: 6px;
+        height: 6px;
+      }
+      ::-webkit-scrollbar-thumb {
+        background: #cbd5e1;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="main-layout">
+      <!-- Header -->
+      <header
+        class="flex items-center justify-between px-4 bg-white border-b border-gray-200 z-50 flex-shrink-0 shadow-sm"
+        style="height: var(--hv-header-height)"
+      >
+        <div class="flex items-center space-x-3">
+          <button
+            @click="isSidebarCollapsed = !isSidebarCollapsed"
+            class="p-2 text-gray-500 hover:bg-gray-100 rounded-md transition-colors"
+          >
+            <i class="pi pi-bars text-lg"></i>
+          </button>
+          <div class="flex items-center">
+            <div
+              class="w-6 h-6 bg-hanwha-orange rounded-full flex items-center justify-center mr-2"
+            >
+              <span class="text-white font-bold text-xs italic">H</span>
+            </div>
+            <span class="text-lg font-bold tracking-tight text-gray-800"
+              >한화손해보험
+              <span class="font-light text-gray-400 ml-1 text-xs uppercase italic"
+                >Admin</span
+              ></span
+            >
+          </div>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="text-xs text-gray-600 flex items-center space-x-2">
+            <span class="bg-gray-100 px-2 py-0.5 rounded border">영업지원파트</span>
+            <span class="font-bold">김한화 차장님</span>
+          </div>
+          <button class="p-1.5 text-gray-400 hover:text-hanwha-orange">
+            <i class="pi pi-bell text-lg"></i>
+          </button>
+        </div>
+      </header>
+
+      <div class="flex flex-1 overflow-hidden">
+        <!-- Sidebar -->
+        <aside :class="['sidebar', isSidebarCollapsed ? 'collapsed' : 'expanded']">
+          <nav class="mt-2 px-1 space-y-0.5">
+            <div v-for="(menu, idx) in menus" :key="idx">
+              <div
+                @click="toggleMenu(menu)"
+                class="menu-item group"
+                :class="{ 'active': menu.active }"
+              >
+                <i :class="[menu.icon, isSidebarCollapsed ? '' : 'mr-3']"></i>
+                <span v-if="!isSidebarCollapsed" class="flex-1">{{ menu.name }}</span>
+                <i
+                  v-if="!isSidebarCollapsed"
+                  :class="['pi text-[10px] opacity-50', menu.open ? 'pi-chevron-down' : 'pi-chevron-right']"
+                ></i>
+              </div>
+            </div>
+          </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="flex-1 flex flex-col min-w-0 overflow-hidden bg-white">
+          <!-- Multi-Tab Bar -->
+          <div class="bg-white flex-shrink-0">
+            <p-tabs v-model:value="activeTab">
+              <p-tablist>
+                <p-tab value="home" class="!px-4"><i class="pi pi-home text-xs"></i></p-tab>
+                <p-tab value="L2408-DETAIL">장기보험 상세정보</p-tab>
+              </p-tablist>
+            </p-tabs>
+          </div>
+
+          <!-- Page Body (Scrollable) -->
+          <div class="flex-1 overflow-y-auto p-6 bg-white">
+            <!-- Title & Breadcrumb -->
+            <div class="flex justify-between items-end border-b border-gray-100 pb-4 mb-4">
+              <div>
+                <h2 class="text-2xl font-bold text-gray-800">
+                  장기보험 상세정보
+                  <span class="text-gray-400 font-normal text-sm ml-2">L2408-00123</span>
+                </h2>
+                <nav class="flex text-xs text-gray-400 space-x-1 mt-1">
+                  <span>계약관리</span> <span>/</span>
+                  <span class="text-gray-600 font-medium">장기보험상세</span>
+                </nav>
+              </div>
+              <div class="flex space-x-2">
+                <button class="btn-base btn-outline">삭제</button>
+                <button class="btn-base btn-outline">이력보기</button>
+                <button class="btn-base btn-primary shadow-sm">
+                  <i class="pi pi-save mr-1.5 text-xs"></i> 저장
+                </button>
+              </div>
+            </div>
+
+            <!-- Section 1: 기본정보 (2단 테이블) -->
+            <div class="form-section-title">기본 계약 정보</div>
+            <table class="form-table mb-8">
+              <tbody>
+                <tr>
+                  <th class="required">증권번호</th>
+                  <td><input type="text" class="p-inputtext" value="L2408-00123" readonly /></td>
+                  <th class="required">상품명</th>
+                  <td>
+                    <div class="flex space-x-1">
+                      <input
+                        type="text"
+                        class="p-inputtext flex-1"
+                        value="(무)한화 수호천사 건강보험"
+                      />
+                      <button class="px-3 border rounded bg-gray-50 hover:bg-gray-100">
+                        <i class="pi pi-search text-xs"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th class="required">계약상태</th>
+                  <td>
+                    <div class="flex items-center space-x-4 h-full">
+                      <label class="inline-flex items-center cursor-pointer"
+                        ><input type="radio" name="st" checked /><span class="ml-2"
+                          >정상</span
+                        ></label
+                      >
+                      <label class="inline-flex items-center cursor-pointer"
+                        ><input type="radio" name="st" /><span class="ml-2">실효</span></label
+                      >
+                      <label class="inline-flex items-center cursor-pointer"
+                        ><input type="radio" name="st" /><span class="ml-2">해지</span></label
+                      >
+                    </div>
+                  </td>
+                  <th class="required">보험기간</th>
+                  <td>
+                    <div class="flex items-center space-x-2">
+                      <input type="date" class="p-inputtext flex-1" value="2024-08-15" />
+                      <span>~</span>
+                      <input type="date" class="p-inputtext flex-1" value="2034-08-15" />
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>납입주기</th>
+                  <td>
+                    <select class="p-inputtext bg-white">
+                      <option>월납</option>
+                      <option>3개월납</option>
+                      <option>연납</option>
+                      <option>일시납</option>
+                    </select>
+                  </td>
+                  <th class="required">모집인</th>
+                  <td>
+                    <div class="flex space-x-1">
+                      <input type="text" class="p-inputtext w-24" value="100293" />
+                      <input type="text" class="p-inputtext flex-1" value="이모집 프로" />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Section 2: 고객정보 (3단 테이블 예시) -->
+            <div class="form-section-title">고객 및 담보 정보</div>
+            <table class="form-table mb-8">
+              <tbody>
+                <tr>
+                  <th class="required">계약자명</th>
+                  <td><input type="text" class="p-inputtext" value="홍길동" /></td>
+                  <th class="required">주민등록번호</th>
+                  <td><input type="text" class="p-inputtext" value="800101-1******" /></td>
+                  <th>연락처</th>
+                  <td><input type="text" class="p-inputtext" value="010-1234-5678" /></td>
+                </tr>
+                <tr>
+                  <th class="required">피보험자명</th>
+                  <td><input type="text" class="p-inputtext" value="홍길동" /></td>
+                  <th class="required">피보험자관계</th>
+                  <td>
+                    <select class="p-inputtext bg-white">
+                      <option>본인</option>
+                      <option>배우자</option>
+                      <option>자녀</option>
+                    </select>
+                  </td>
+                  <th>직업</th>
+                  <td>
+                    <div class="flex space-x-1">
+                      <input type="text" class="p-inputtext flex-1" value="사무직" />
+                      <button class="px-2 border rounded bg-gray-50">
+                        <i class="pi pi-search text-xs"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <th>주소</th>
+                  <td colspan="5">
+                    <div class="flex flex-col space-y-2">
+                      <div class="flex space-x-2">
+                        <input type="text" class="p-inputtext w-32" value="06232" />
+                        <button class="btn-base btn-outline py-1 px-4 !min-w-0">
+                          우편번호 찾기
+                        </button>
+                      </div>
+                      <input
+                        type="text"
+                        class="p-inputtext"
+                        value="서울특별시 강남구 테헤란로 123"
+                      />
+                      <input type="text" class="p-inputtext" value="한화금융센터 15층" />
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+
+            <!-- Section 3: 특약/담보 정보 (그리드형 테이블) -->
+            <div class="form-section-title">
+              담보별 가입 내역
+              <button class="btn-base btn-outline py-1 text-xs !min-w-0">
+                <i class="pi pi-plus mr-1"></i> 담보추가
+              </button>
+            </div>
+            <div class="border border-gray-200 rounded overflow-hidden">
+              <table class="custom-table w-full">
+                <thead class="bg-gray-50 border-b border-gray-200">
+                  <tr>
+                    <th class="w-10 text-center"><input type="checkbox" /></th>
+                    <th>담보명</th>
+                    <th class="w-32 text-right">가입금액</th>
+                    <th class="w-32 text-right">보험료</th>
+                    <th class="w-24 text-center">갱신여부</th>
+                    <th class="w-24 text-center">삭제</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-100">
+                  <tr>
+                    <td class="text-center"><input type="checkbox" /></td>
+                    <td class="font-bold">일반상해사망</td>
+                    <td class="text-right">100,000,000</td>
+                    <td class="text-right">12,500</td>
+                    <td class="text-center">비갱신</td>
+                    <td class="text-center">
+                      <button class="pi pi-trash text-gray-300 hover:text-red-500"></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-center"><input type="checkbox" /></td>
+                    <td class="font-bold">질병후유장해(3%이상)</td>
+                    <td class="text-right">50,000,000</td>
+                    <td class="text-right">15,800</td>
+                    <td class="text-center">갱신</td>
+                    <td class="text-center">
+                      <button class="pi pi-trash text-gray-300 hover:text-red-500"></button>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td class="text-center"><input type="checkbox" /></td>
+                    <td class="font-bold">암진단비(유사암제외)</td>
+                    <td class="text-right">30,000,000</td>
+                    <td class="text-right">32,100</td>
+                    <td class="text-center">비갱신</td>
+                    <td class="text-center">
+                      <button class="pi pi-trash text-gray-300 hover:text-red-500"></button>
+                    </td>
+                  </tr>
+                </tbody>
+                <tfoot class="bg-gray-50 font-bold border-t border-gray-200">
+                  <tr>
+                    <td colspan="3" class="text-right p-3">합계 보험료</td>
+                    <td class="text-right p-3 text-orange-600">60,400 원</td>
+                    <td colspan="2"></td>
+                  </tr>
+                </tfoot>
+              </table>
+            </div>
+
+            <!-- Page Footer Buttons -->
+            <div class="flex justify-center space-x-3 mt-10 pb-10">
+              <button class="btn-base btn-outline px-10 py-3 text-sm">목록으로</button>
+              <button class="btn-base btn-primary px-12 py-3 text-sm shadow-lg">
+                저장 및 확정
+              </button>
+            </div>
+          </div>
+
+          <!-- Minimized Footer -->
+          <footer
+            class="h-6 bg-gray-50 border-t border-gray-200 flex items-center px-4 text-[10px] text-gray-400 justify-between"
+          >
+            <span>© Hanwha General Insurance. 상세조회 모드</span>
+            <span>마지막 수정: 2024-08-27 15:45 (김한화)</span>
+          </footer>
+        </main>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue;
+
+      const App = {
+        setup() {
+          const isSidebarCollapsed = ref(false);
+          const activeTab = ref('L2408-DETAIL');
+          const menus = ref([
+            { name: '계약관리', icon: 'pi pi-file-edit', active: true, open: true },
+            { name: '보상관리', icon: 'pi pi-briefcase', active: false, open: false },
+            { name: '고객관리', icon: 'pi pi-users', active: false, open: false },
+            { name: '통계분석', icon: 'pi pi-chart-bar', active: false, open: false },
+          ]);
+
+          const toggleMenu = (menu) => {
+            if (isSidebarCollapsed.value) isSidebarCollapsed.value = false;
+            menu.open = !menu.open;
+          };
+
+          return { isSidebarCollapsed, menus, activeTab, toggleMenu };
+        },
+      };
+
+      const app = createApp(App);
+      app.use(PrimeVue.Config, {
+        theme: {
+          preset: PrimeVue.Themes.Aura,
+          options: {
+            cssLayer: { name: 'primevue', order: 'tailwind-base, primevue, tailwind-utilities' },
+          },
+        },
+      });
+      app.component('p-tabs', PrimeVue.Tabs);
+      app.component('p-tablist', PrimeVue.TabList);
+      app.component('p-tab', PrimeVue.Tab);
+      app.mount('#app');
+    </script>
+  </body>
+</html>

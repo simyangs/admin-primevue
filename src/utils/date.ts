@@ -14,3 +14,23 @@ export const parseNumericToDate = (value: string): Date | null => {
   }
   return null;
 };
+
+export const stringToDate = (str: string | null) => {
+  if (!str) return null;
+  str = str.replace(/[^0-9]/g, '');
+  if (str.length !== 8) return null;
+
+  const y = str.substring(0, 4);
+  const m = str.substring(4, 6);
+  const d = str.substring(6, 8);
+
+  return new Date(`${y}-${m}-${d}`);
+};
+
+export const toNumericStr = (d: Date) => {
+  if (!d) return '';
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}${month}${day}`;
+};
