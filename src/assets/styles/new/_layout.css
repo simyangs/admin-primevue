@@ -127,6 +127,7 @@ body {
 }
 
 .p-inputtext,
+.p-inputnumber,
 .p-inputgroup,
 .p-select,
 .p-datepicker-input,
@@ -142,49 +143,101 @@ body {
   font-size: 13px !important;
 }
 
-.p-button.btn {
+/*BUTTON*/
+.p-button.btn-base {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 5px 12px;
+  padding: 6px 14px;
   border-radius: 4px;
   font-weight: 700;
   font-size: 13px;
   cursor: pointer;
   transition: all 0.2s;
-  min-width: 4.5rem;
+  min-width: 4.5rem; /* 최소 4글자 폭 */
+  white-space: nowrap;
+}
+.p-button.btn-search {
+  background-color: var(--hv-primary) !important;
+  color: white !important;
+  border: 1px solid var(--hv-primary) !important;
+}
+.p-button.btn-search:hover {
+  background-color: var(--p-primary-600) !important;
+  border-color: var(--p-primary-600) !important;
 }
 
-.p-button.btn-primary {
-  background-color: var(--hv-primary);
-  color: white;
-  border: none;
-}
-.p-button.btn-primary:hover {
-  background-color: #d65d14;
-}
-.p-button.btn-outline {
-  background-color: white;
-  border: 1px solid var(--hv-border);
-  color: var(--hv-text-base);
-}
-.p-button.btn-outline:hover {
+/* 초기화 (Neutral) */
+.p-button.btn-init {
   background-color: #f8fafc !important;
+  color: var(--hv-text-muted) !important;
+  border: 1px solid var(--hv-border) !important;
 }
-.p-button.btn-dark {
-  background-color: var(--hv-dark);
-  color: white;
-  border: none;
-}
-.p-button.btn-dark:hover {
-  background-color: #000 !important;
-  border: none !important;
+.p-button.btn-init:hover {
+  background-color: #f1f5f9 !important;
+  color: var(--hv-text-base) !important;
+  border: 1px solid var(--hv-border) !important;
 }
 
-/* 2. 포커스 시 한화 오렌지(#FF6600) 강조 */
-.p-inputtext:enabled:focus {
-  border-color: var(--p-primary-500) !important;
-  box-shadow: 0 0 0 1px var(--p-primary-200) !important;
+.p-button.btn-action {
+  background-color: var(--hv-dark) !important;
+  color: white !important;
+  border: 1px solid var(--hv-dark) !important;
+}
+.p-button.btn-action:hover {
+  background-color: #474341 !important;
+}
+
+/* 이동 - 링크형 (Ghost) */
+.p-button.btn-link {
+  background: transparent !important;
+  color: var(--hv-info) !important;
+  border: none !important;
+  min-width: auto !important;
+  text-decoration: underline !important;
+  text-underline-offset: 4px !important;
+  padding: 4px 8px !important;
+}
+.p-button.btn-link:hover {
+  color: #1d4ed8 !important;
+  background-color: rgba(37, 99, 235, 0.05) !important;
+}
+
+/* 이동 - 팝업형 (Outline) */
+.p-button.btn-go {
+  background-color: white !important;
+  color: var(--hv-text-base) !important;
+  border: 1px solid var(--hv-border) !important;
+}
+.p-button.btn-go:hover {
+  background-color: #f8fafc !important;
+  border-color: var(--hv-text-muted) !important;
+}
+
+/* 2. 아이콘 + 글씨 버튼 */
+
+/* 엑셀다운 (Success Green) */
+.p-button.btn-excel {
+  background-color: white !important;
+  color: var(--hv-success) !important;
+  border: 1px solid var(--hv-success) !important;
+}
+.p-button.btn-excel:hover {
+  background-color: #f0fdf4 !important;
+}
+
+.p-button.btn-print {
+  background-color: white !important;
+  color: #1e293b !important;
+  border: 1px solid var(--hv-border) !important;
+}
+.p-button.btn-print:hover {
+  background-color: #f0fdf4 !important;
+}
+
+.btn-base i {
+  font-size: 14px;
+  margin-right: 6px;
 }
 
 /* 3. 셀렉트 박스(Select) 스타일 조정 */
@@ -239,34 +292,96 @@ body {
   padding: 16px;
 }
 
-.search-grid {
-  display: flex;
-  flex-wrap: wrap;
-  flex: 1;
-  gap: 1rem 2rem;
-}
-
 .search-actions {
   display: flex;
-  align-items: flex-end;
+  flex: 1 1 0%;
+  align-items: center;
+  justify-content: flex-end;
   gap: 0.5rem;
   margin-left: 2rem;
   padding-bottom: 2px;
 }
 
-.search-grid .form-group {
+.search-item {
   display: flex;
   align-items: center;
-  gap: 10px;
+  min-width: 280px;
 }
 
-.search-grid .form-group label {
-  font-size: 0.85rem;
+.search-item label {
+  width: 100px;
   font-weight: 700;
-  color: #4a5568;
-  width: 80px; /* ★ 라벨 너비 고정 (중요) ★ */
-  text-align: right; /* 라벨 오른쪽 정렬로 인풋박스와 밀착 */
+  color: var(--hv-text-muted);
+  text-align: right;
+  margin-right: 12px;
+  flex-shrink: 0;
   white-space: nowrap;
+}
+
+.search-item .search-input-wrap {
+  flex: 1;
+  min-width: 0;
+}
+
+.search-section-collapsed {
+  background: var(--hv-bg-content);
+  border: 1px solid var(--hv-border);
+  border-radius: 4px;
+  padding: 0;
+  overflow: hidden;
+}
+
+.search-content {
+  padding: 16px;
+}
+.search-flow-wrapper {
+  transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+/* 접혔을 때 2줄 높이 (항목 높이 36px * 2 + 간격) */
+.search-flow-wrapper.collapsed {
+  max-height: 80px;
+}
+
+.search-flow-wrapper.expanded {
+  max-height: 300px;
+}
+
+.search-actions-collapsed {
+  background-color: #fcfcfd;
+  border-top: 1px solid var(--hv-border);
+  padding: 0.5rem 1.25rem;
+  display: flex;
+  align-items: center;
+  position: relative;
+  min-height: 48px;
+}
+
+.search-action-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.btn-toggle {
+  position: absolute;
+  left: 16px;
+
+  font-size: 11px;
+  color: var(--hv-text-muted);
+  background: white;
+  padding: 3px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--hv-border);
+  cursor: pointer;
+  transition: all 0.2s;
+  z-index: 10;
+}
+.btn-toggle:hover {
+  border-color: var(--hv-primary);
+  color: var(--hv-primary);
+  background-color: #fff9f5;
 }
 
 .form-section-title {

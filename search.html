@@ -1,0 +1,276 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>한화손해보험 어드민 조회영역 가이드</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Vue 3 -->
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- PrimeIcons -->
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+      :root {
+        --hv-primary: #f37321;
+        --hv-dark: #231f20;
+        --hv-bg-main: #f1f4f9;
+        --hv-border: #e2e8f0;
+        --hv-text-base: #1e293b;
+        --hv-text-muted: #64748b;
+        --hv-label-width: 110px;
+        --hv-input-height: 32px;
+      }
+
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: var(--hv-bg-main);
+        color: var(--hv-text-base);
+        font-size: 14px;
+        padding: 20px;
+      }
+
+      /* --- 통합 조회 영역 컨테이너 --- */
+      .search-container {
+        background-color: white;
+        border: 1px solid var(--hv-border);
+        border-radius: 8px;
+        padding: 0; /* 내부 여백 하단 바와 분리 */
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        overflow: hidden;
+      }
+
+      /* --- 항목 영역 여백 --- */
+      .search-content {
+        padding: 1rem 1.25rem 0.5rem 1.25rem;
+      }
+
+      /* --- 애니메이션 컨테이너 --- */
+      .search-flow-wrapper {
+        transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        overflow: hidden;
+      }
+
+      /* 접혔을 때 2줄 높이 (항목 높이 36px * 2 + 간격) */
+      .search-flow-wrapper.collapsed {
+        max-height: 80px;
+      }
+
+      .search-flow-wrapper.expanded {
+        max-height: 1000px;
+      }
+
+      /* --- 개별 항목 스타일 --- */
+      .search-item {
+        display: flex;
+        align-items: center;
+        min-width: 260px;
+        min-height: 36px;
+        padding: 2px 0;
+      }
+
+      .search-label {
+        flex: 0 0 var(--hv-label-width);
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--hv-text-muted);
+        text-align: right;
+        margin-right: 12px;
+        word-break: keep-all;
+        line-height: 1.3;
+      }
+
+      .search-input-wrap {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .hv-input {
+        width: 100%;
+        height: var(--hv-input-height);
+        padding: 0 10px;
+        font-size: 13px;
+        border: 1px solid var(--hv-border);
+        border-radius: 4px;
+        outline: none;
+        transition: border-color 0.2s;
+        background-color: white;
+      }
+      .hv-input:focus {
+        border-color: var(--hv-primary);
+      }
+
+      /* --- 하단 컨트롤 바 (토글 + 액션버튼) --- */
+      .search-control-bar {
+        background-color: #fcfcfd;
+        border-top: 1px solid var(--hv-border);
+        padding: 0.5rem 1.25rem;
+        display: flex;
+        align-items: center;
+        position: relative;
+        min-height: 48px;
+      }
+
+      .search-action-group {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin-left: auto; /* 우측 정렬 */
+      }
+
+      .btn-base {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        height: 30px;
+        padding: 0 14px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 4.5rem;
+      }
+      .btn-init {
+        background-color: white;
+        color: var(--hv-text-muted);
+        border: 1px solid var(--hv-border);
+      }
+      .btn-init:hover {
+        background-color: #f8fafc;
+        border-color: #cbd5e1;
+      }
+
+      .btn-search {
+        background-color: var(--hv-dark);
+        color: white;
+        border: 1px solid var(--hv-dark);
+      }
+      .btn-search:hover {
+        background-color: #000;
+      }
+
+      .btn-toggle {
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 11px;
+        color: var(--hv-text-muted);
+        background: white;
+        padding: 3px 12px;
+        border-radius: 20px;
+        border: 1px solid var(--hv-border);
+        cursor: pointer;
+        transition: all 0.2s;
+        z-index: 10;
+      }
+      .btn-toggle:hover {
+        border-color: var(--hv-primary);
+        color: var(--hv-primary);
+        background-color: #fff9f5;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app" class="w-full mx-auto space-y-6">
+      <section>
+        <div class="flex items-center justify-between mb-3">
+          <h2 class="text-lg font-bold text-gray-800 flex items-center">
+            <span class="w-1.5 h-5 bg-orange-500 mr-3 rounded-full"></span>
+            하단 컨트롤 바 통합 조회 영역
+          </h2>
+        </div>
+
+        <div class="search-container">
+          <!-- 1. 항목 영역: 순수하게 Input 항목들만 포함 -->
+          <div class="search-content">
+            <div
+              :class="['search-flow-wrapper flex flex-wrap gap-x-6 gap-y-1 items-start', isExpanded ? 'expanded' : 'collapsed']"
+            >
+              <!-- 샘플 항목 12개 -->
+              <div v-for="n in 12" :key="'item-'+n" class="search-item">
+                <label class="search-label">조회 항목 {{ n }}</label>
+                <div class="search-input-wrap">
+                  <input type="text" class="hv-input" :placeholder="'내용 입력 ' + n" />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. 컨트롤 바: 접기 버튼과 실행 버튼 통합 -->
+          <div class="search-control-bar">
+            <!-- 접기/펴기 (중앙 고정) -->
+            <button @click="isExpanded = !isExpanded" class="btn-toggle shadow-sm">
+              <i
+                :class="['pi mr-1.5', isExpanded ? 'pi-chevron-up' : 'pi-chevron-down']"
+                style="font-size: 8px"
+              ></i>
+              <span v-if="isExpanded">접기</span>
+              <span v-else>더보기</span>
+            </button>
+
+            <!-- 실행 버튼 그룹 (우측 정렬) -->
+            <div class="search-action-group">
+              <button class="btn-base btn-init">초기화</button>
+              <button class="btn-base btn-search">
+                <i class="pi pi-search mr-2 text-xs"></i>조회
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 설계 설명 -->
+      <div class="p-5 bg-white border border-gray-200 rounded-lg text-sm text-gray-600 shadow-sm">
+        <h3
+          class="text-hv-primary font-bold mb-3 flex items-center"
+          style="color: var(--hv-primary)"
+        >
+          <i class="pi pi-info-circle mr-2"></i> 레이아웃 개선 포인트 (Control Bar 통합형)
+        </h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <ul class="space-y-2">
+            <li>
+              <b class="text-gray-800">1. 버튼 간섭 완전 배제:</b>
+              조회 버튼을 항목 플로우에서 제외하여, 항목이 첫 줄을 가득 채우더라도 버튼이 아래로
+              밀려나 영역을 낭비하는 현상을 방지했습니다.
+            </li>
+            <li>
+              <b class="text-gray-800">2. 고정 가시성 확보:</b>
+              컨트롤 바가 하단에 분리되어 있어, 조회 영역이 접혀있든 펼쳐져 있든 '조회'와 '초기화'
+              버튼의 위치가 항상 일정하여 학습 효과가 높습니다.
+            </li>
+          </ul>
+          <ul class="space-y-2">
+            <li>
+              <b class="text-gray-800">3. 절대 위치를 활용한 중앙 정렬:</b>
+              접기/펴기 버튼은 <code>absolute</code>와 <code>left: 50%</code>를 활용하여 중앙에
+              고정하고, 액션 버튼은 <code>ml-auto</code>로 우측에 배치하여 균형을 맞췄습니다.
+            </li>
+            <li>
+              <b class="text-gray-800">4. 시각적 계층 구조:</b>
+              컨트롤 바에 연한 배경색(<code>#fcfcfd</code>)과 상단 경계선을 주어 조회 조건 입력부와
+              실행부를 명확하게 구분했습니다.
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const { createApp, ref } = Vue;
+
+      const App = {
+        setup() {
+          const isExpanded = ref(false);
+          return { isExpanded };
+        },
+      };
+
+      createApp(App).mount('#app');
+    </script>
+  </body>
+</html>

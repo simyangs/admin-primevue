@@ -8,9 +8,10 @@ import CommSearchPanel from '@/components/com/CommSearchPanel.vue';
 import CommDatePicker from '@/components/com/CommDatePicker.vue';
 import SMP_3 from '@/views/sample/SMP_3.vue';
 import type { Product } from '@/types/sample';
-import { Button, InputText, Select } from 'primevue';
+import { InputText, InputNumber, Select } from 'primevue';
 import CommInputGroup from '@/components/com/CommInputGroup.vue';
 import CommRangeDatePicker from '@/components/com/CommRangeDatePicker.vue';
+import CommButton from '@/components/com/CommButton.vue';
 interface SelectInfo {
   page: number;
   rows: number;
@@ -94,6 +95,7 @@ const columns = [
 ];
 
 const name = ref<string>('');
+const quantity = ref<number>();
 const date = ref('20260401');
 const codeInfo = reactive({
   code: '',
@@ -121,43 +123,59 @@ const handleCallbackModal3 = () => {
 </script>
 <template>
   <CommSearchPanel>
-    <div class="form-group">
+    <div class="search-item">
       <label>이름</label>
-      <InputText v-model="name" />
+      <div class="search-input-wrap">
+        <InputText v-model="name" />
+      </div>
     </div>
-    <div class="form-group">
+    <div class="search-item">
       <label>조회일자</label>
-      <CommDatePicker :date="date" @update:modelValue="(val: any) => console.log(val)" />
+      <div class="search-input-wrap">
+        <CommDatePicker :date="date" @update:modelValue="(val: any) => console.log(val)" />
+      </div>
     </div>
-    <div class="form-group">
+    <div class="search-item">
       <label>조회기간</label>
-      <CommRangeDatePicker
-        v-model:startValue="searchDs.startDate"
-        v-model:endValue="searchDs.endDate"
-        @update:startValue="console.log(searchDs)"
-        @update:endValue="console.log(searchDs)"
-      />
+      <div class="search-input-wrap">
+        <CommRangeDatePicker
+          v-model:startValue="searchDs.startDate"
+          v-model:endValue="searchDs.endDate"
+          @update:startValue="console.log(searchDs)"
+          @update:endValue="console.log(searchDs)"
+        />
+      </div>
     </div>
-    <div class="form-group">
+    <div class="search-item">
       <label>코드</label>
-      <CommInputGroup
-        :inputValue="codeInfo.name"
-        :readonly="true"
-        width="150px"
-        @click="handleInputGroup3"
-      />
+      <div class="search-input-wrap">
+        <CommInputGroup
+          :inputValue="codeInfo.name"
+          :readonly="true"
+          width="150px"
+          @click="handleInputGroup3"
+        />
+      </div>
     </div>
-    <div class="form-group">
-      <label>이름</label>
-      <InputText v-model="name" />
+    <div class="search-item">
+      <label>숫자</label>
+      <div class="search-input-wrap">
+        <InputNumber v-model="quantity" />
+      </div>
     </div>
-    <div class="form-group">
+    <div class="search-item">
       <label>조회일자</label>
-      <CommDatePicker :date="date" @update:modelValue="(val: any) => console.log(val)" />
+      <div class="search-input-wrap">
+        <CommDatePicker :date="date" @update:modelValue="(val: any) => console.log(val)" />
+      </div>
     </div>
     <template #actions>
-      <Button class="btn btn-outline" label="초기화" />
-      <Button class="btn btn-dark" label="조회" />
+      <CommButton label="초기화" type="init" @click="console.log('init')" />
+      <CommButton label="조회" type="search" @click="console.log('search')" />
+      <CommButton label="처리" type="action" @click="console.log('action')" />
+      <CommButton label="팝업" type="go" @click="console.log('go')" />
+      <CommButton label="엑셀다운" type="excel" @click="console.log('excel')" />
+      <CommButton label="출력" type="print" @click="console.log('print')" />
     </template>
   </CommSearchPanel>
   <section class="data-section">
@@ -204,6 +222,6 @@ const handleCallbackModal3 = () => {
       placeholder="Select a City"
       class="w-full md:w-56"
     />
-    <Button class="btn btn-dark" label="선택" @click="handleCallbackModal3" />
+    <CommButton label="선택" type="action" @click="handleCallbackModal3" />
   </CommModal>
 </template>

@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>한화손해보험 어드민 버튼 가이드</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- PrimeIcons -->
+    <link rel="stylesheet" href="https://unpkg.com/primeicons/primeicons.css" />
+
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap');
+
+      :root {
+        --hv-primary: #f37321; /* 한화 오렌지 */
+        --hv-dark: #231f20; /* 처리/시스템 다크 */
+        --hv-bg-main: #f1f4f9;
+        --hv-border: #e2e8f0;
+        --hv-text-base: #1e293b;
+        --hv-text-muted: #64748b;
+        --hv-success: #15803d; /* 엑셀/성공 그린 */
+        --hv-info: #2563eb; /* 이동/링크 블루 */
+      }
+
+      body {
+        font-family: 'Noto Sans KR', sans-serif;
+        background-color: var(--hv-bg-main);
+        color: var(--hv-text-base);
+        font-size: 14px;
+        padding: 40px;
+      }
+
+      /* --- 버튼 공통 베이스 --- */
+      .btn-base {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 6px 14px;
+        border-radius: 4px;
+        font-weight: 700;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.2s;
+        min-width: 4.5rem; /* 최소 4글자 폭 */
+        white-space: nowrap;
+      }
+
+      /* 1. 글씨만 있는 버튼 (색상별 분류) */
+
+      /* 조회 (Primary) */
+      .btn-search {
+        background-color: var(--hv-primary);
+        color: white;
+        border: 1px solid var(--hv-primary);
+      }
+      .btn-search:hover {
+        background-color: #d65d14;
+        border-color: #d65d14;
+      }
+
+      /* 초기화 (Neutral) */
+      .btn-init {
+        background-color: #f8fafc;
+        color: var(--hv-text-muted);
+        border: 1px solid var(--hv-border);
+      }
+      .btn-init:hover {
+        background-color: #f1f5f9;
+        color: var(--hv-text-base);
+      }
+
+      /* 처리 (Dark) */
+      .btn-process {
+        background-color: var(--hv-dark);
+        color: white;
+        border: 1px solid var(--hv-dark);
+      }
+      .btn-process:hover {
+        background-color: #000000;
+      }
+
+      /* 이동 - 링크형 (Ghost) */
+      .btn-move-link {
+        background: transparent;
+        color: var(--hv-info);
+        border: none;
+        min-width: auto;
+        text-decoration: underline;
+        text-underline-offset: 4px;
+        padding: 4px 8px;
+      }
+      .btn-move-link:hover {
+        color: #1d4ed8;
+        background-color: rgba(37, 99, 235, 0.05);
+      }
+
+      /* 이동 - 팝업형 (Outline) */
+      .btn-move-popup {
+        background-color: white;
+        color: var(--hv-text-base);
+        border: 1px solid var(--hv-border);
+      }
+      .btn-move-popup:hover {
+        background-color: #f8fafc;
+        border-color: var(--hv-text-muted);
+      }
+
+      /* 2. 아이콘 + 글씨 버튼 */
+
+      /* 엑셀다운 (Success Green) */
+      .btn-excel {
+        background-color: white;
+        color: var(--hv-success);
+        border: 1px solid var(--hv-success);
+      }
+      .btn-excel:hover {
+        background-color: #f0fdf4;
+      }
+      .btn-excel i {
+        font-size: 14px;
+        margin-right: 6px;
+      }
+
+      /* --- 가이드 레이아웃 용 --- */
+      .guide-section {
+        background: white;
+        border-radius: 8px;
+        padding: 24px;
+        margin-bottom: 30px;
+        border: 1px solid var(--hv-border);
+      }
+      .guide-title {
+        font-size: 16px;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--hv-bg-main);
+        color: var(--hv-dark);
+      }
+      .btn-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: center;
+      }
+      .label-text {
+        width: 120px;
+        font-size: 12px;
+        color: var(--hv-text-muted);
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="max-w-4xl mx-auto">
+      <h1 class="text-2xl font-bold mb-8 flex items-center">
+        <i class="pi pi-palette mr-3 text-hv-primary" style="color: var(--hv-primary)"></i>
+        어드민 표준 버튼 가이드
+      </h1>
+
+      <!-- 섹션 1: 텍스트 전용 버튼 -->
+      <div class="guide-section shadow-sm">
+        <h2 class="guide-title">1. 텍스트 전용 버튼 (용도별 분류)</h2>
+
+        <div class="space-y-6">
+          <div class="flex items-center">
+            <div class="label-text">조회 (Search)</div>
+            <div class="btn-group">
+              <button class="btn-base btn-search">조회</button>
+              <button class="btn-base btn-search">검색하기</button>
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <div class="label-text">초기화 (Reset)</div>
+            <div class="btn-group">
+              <button class="btn-base btn-init">초기화</button>
+              <button class="btn-base btn-init">조건삭제</button>
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <div class="label-text">처리 (Process)</div>
+            <div class="btn-group">
+              <button class="btn-base btn-process">최종확정</button>
+              <button class="btn-base btn-process">승인처리</button>
+              <button class="btn-base btn-process">저장</button>
+            </div>
+          </div>
+
+          <div class="flex items-center">
+            <div class="label-text">이동 (Move)</div>
+            <div class="btn-group">
+              <!-- 링크형 -->
+              <button class="btn-move-link">상세보기</button>
+              <button class="btn-move-link">이력현황</button>
+              <span class="mx-2 text-gray-300">|</span>
+              <!-- 팝업/아웃라인형 -->
+              <button class="btn-base btn-move-popup">팝업열기</button>
+              <button class="btn-base btn-move-popup">창전환</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 섹션 2: 아이콘 + 텍스트 버튼 -->
+      <div class="guide-section shadow-sm">
+        <h2 class="guide-title">2. 아이콘 + 텍스트 버튼</h2>
+
+        <div class="space-y-6">
+          <div class="flex items-center">
+            <div class="label-text">데이터 출력</div>
+            <div class="btn-group">
+              <button class="btn-base btn-excel"><i class="pi pi-file-excel"></i>엑셀다운</button>
+              <button
+                class="btn-base btn-excel"
+                style="--hv-success: #1e293b; border-color: #e2e8f0; color: #1e293b"
+              >
+                <i class="pi pi-print"></i>프린트
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 사용 가이드 팁 -->
+      <div class="mt-10 p-4 bg-orange-50 border border-orange-100 rounded-lg">
+        <h3 class="text-hv-primary font-bold text-sm mb-2" style="color: var(--hv-primary)">
+          <i class="pi pi-info-circle mr-1"></i> UI 적용 팁
+        </h3>
+        <ul class="text-xs text-orange-800 space-y-1 opacity-80">
+          <li>• 버튼의 최소 너비는 4글자 기준(약 63px)으로 설정되어 일관성을 유지합니다.</li>
+          <li>• 조회와 초기화 버튼은 검색 영역 우측 하단 또는 그리드 마지막 열에 배치합니다.</li>
+          <li>• 엑셀 다운로드는 보통 데이터 테이블의 툴바 좌측 또는 우측 상단에 위치합니다.</li>
+          <li>• 처리 버튼(확정, 저장)은 페이지 최하단 액션 바에 주로 배치합니다.</li>
+        </ul>
+      </div>
+    </div>
+  </body>
+</html>
