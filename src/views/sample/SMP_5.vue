@@ -1,67 +1,19 @@
 <script setup lang="ts">
-import { ref, onMounted, onBeforeUnmount, watch } from 'vue';
-import Editor from '@toast-ui/editor';
-import '@toast-ui/editor/dist/toastui-editor.css'; // 에디터 스타일
-import '@toast-ui/editor/dist/i18n/ko-kr';
-import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
-import '@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css';
-const props = defineProps<{
-  modelValue: string;
-  height?: string;
-}>();
+import CommEditor2 from '@/components/com/CommEditor2.vue';
+import { ref } from 'vue';
 
-const emit = defineEmits(['update:modelValue']);
-const editorRef = ref<HTMLElement | null>(null);
-let editor: Editor | null = null;
-
-// onMounted(() => {
-//   if (editorRef.value) {
-//     editor = new Editor({
-//       el: editorRef.value,
-//       height: props.height || '500px',
-//       initialEditType: 'wysiwyg',
-//       previewStyle: 'vertical',
-//       hideModeSwitch: true,
-//       initialValue: props.modelValue,
-//       language: 'ko-KR',
-//       toolbarItems: [
-//         ['heading', 'bold', 'italic', 'strike'],
-//         ['hr', 'quote'],
-//         ['ul', 'ol', 'task', 'indent', 'outdent'],
-//         ['table', 'link'], // 'image'를 여기서 뺐습니다.
-//         ['code', 'codeblock'],
-//         ['scrollSync'],
-//       ],
-//       hooks: {
-//         addImageBlobHook: () => {
-//           alert('이미지 업로드는 허용되지 않습니다.');
-//           return false; // 이미지 삽입 중단
-//         },
-//       },
-//       events: {
-//         change: () => {
-//           // 내용이 바뀔 때마다 부모에게 전달
-//           emit('update:modelValue', editor?.getMarkdown());
-//         },
-//       },
-//     });
-//   }
-// });
-
-// 부모에서 데이터가 강제로 바뀌었을 때 반영
-// watch(
-//   () => props.modelValue,
-//   (newVal) => {
-//     if (editor && newVal !== editor.getMarkdown()) {
-//       editor.setMarkdown(newVal);
-//     }
-//   },
-// );
-
-// onBeforeUnmount(() => {
-//   editor?.destroy();
-// });
+const content = ref('');
+const print = () => {
+  console.log(content.value);
+};
+const setContent = () => {
+  content.value = 'test!!!!!';
+};
 </script>
 <template>
-  <Editor />
+  <div style="width: 1000px">
+    <CommEditor2 v-model:model-value="content" />
+    <button @click="print">내용</button>
+    <button @click="setContent">입력</button>
+  </div>
 </template>
