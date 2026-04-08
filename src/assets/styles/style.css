@@ -1,15 +1,16 @@
 @charset "utf-8";
-
-@import 'tailwindcss';
 @import './_variables.css';
-/* @import './_base.css';
-@import './_main.css';
-@import './_topbar.css';
-@import './_sidebar.css';
-@import './_tabmanager.css';
-@import './_overlay.css';
-@import './_datatable.css'; */
 
 @import './new/_variables.css';
 @import './new/_layout.css';
 @import './new/_datatable.css';
+
+@layer tailwind-base, primereact, tailwind-utilities;
+
+@layer tailwind-base {
+  @tailwind base;
+}
+
+@layer tailwind-utilities {
+  @tailwind utilities;
+}

@@ -13,24 +13,19 @@ const menuList: AppMenuItem[] = [
     key: 'C001',
     label: '관리1',
     icon: 'pi pi-file-edit',
-    items: [{ key: 'M001', label: '샘플1', to: '/SMP1' }],
+    items: [
+      { key: 'M001', label: '샘플1', to: '/SMP1' },
+      { key: 'M002', label: '샘플2', to: '/SMP2' },
+    ],
   },
   {
     key: 'C002',
     label: '관리2',
     icon: 'pi pi-briefcase',
     items: [
-      { key: 'M002', label: '샘플2', to: '/SMP2' },
       { key: 'M003', label: '샘플3', to: '/SMP3' },
       { key: 'M004', label: '샘플4', to: '/SMP4' },
       { key: 'M005', label: '샘플5', to: '/SMP5' },
-      { key: 'M006', label: '샘플6', to: '/SMP6' },
-      { key: 'M007', label: '샘플7', to: '/SMP7' },
-      { key: 'M008', label: '샘플8', to: '/SMP8' },
-      { key: 'M009', label: '샘플9', to: '/SMP9' },
-      { key: 'M010', label: '샘플10', to: '/SMP10' },
-      { key: 'M011', label: '샘플11', to: '/SMP11' },
-      { key: 'M012', label: '샘플12', to: '/SMP12' },
     ],
   },
 ];

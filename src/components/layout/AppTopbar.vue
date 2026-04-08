@@ -27,11 +27,11 @@ const { toggleMenu } = useLayout();
     </div>
 
     <div class="flex items-center space-x-4">
-      <div class="flex items-center space-x-2 text-xs text-gray-600">
+      <div class="flex items-center space-x-2 text-sm text-gray-600">
         <span class="bg-gray-100 px-2 py-0.5 rounded font-medium border border-gray-200"
-          >영업지원파트</span
+          >관리자</span
         >
-        <span class="font-bold text-gray-800">김한화 차장님</span>
+        <span class="font-bold text-gray-800">김한화</span>
         <button
           class="ml-2 hover:text-hanwha-orange underline transition-colors underline-offset-4"
         >
