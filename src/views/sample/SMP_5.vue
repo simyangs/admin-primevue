@@ -1,6 +1,6 @@
 <script setup lang="ts">
-console.log('sample2');
+console.log('sample5');
 </script>
 <template>
-  <div>샘플페이지2</div>
+  <div>샘플페이지5</div>
 </template>
