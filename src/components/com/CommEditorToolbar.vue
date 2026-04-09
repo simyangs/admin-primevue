@@ -24,7 +24,21 @@ const { editor } = defineProps<{
   editor: Editor | undefined;
 }>();
 // UI용 옵션 데이터
-const fontSizes = ['12px', '14px', '16px', '18px', '20px', '24px', '32px'];
+const fontSizes = [
+  '8px',
+  '9px',
+  '10px',
+  '11px',
+  '12px',
+  '14px',
+  '16px',
+  '18px',
+  '20px',
+  '24px',
+  '32px',
+  '48px',
+  '72px',
+];
 const fontFamilies = ['Inter', 'Arial', '나눔고딕', '궁서', 'Courier New'];
 // 툴바 아이콘 기본 설정
 const iconSize = 16;
@@ -211,9 +225,17 @@ button {
   align-items: center;
   justify-content: center;
   border-radius: 4px;
-  /* ...기존 스타일 유지... */
+}
+button.active {
+  background-color: #e2e8f0; /* 연한 회색/파란색 배경 */
+  color: #2563eb; /* 아이콘 색상을 파란색으로 변경 */
+  border-color: #cbd5e1;
+  box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.06); /* 눌린 느낌 */
 }
 
+button:hover:not(.active) {
+  background-color: #f1f5f9;
+}
 /* 드롭다운(Select) 슬림화 */
 select {
   border: 1px solid transparent;
@@ -225,6 +247,8 @@ select {
   cursor: pointer;
   outline: none;
   appearance: none; /* 브라우저 기본 화살표 제거 (선택사항) */
+
+  transition: all 0.2s;
 }
 
 select:hover {

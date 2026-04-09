@@ -58,7 +58,7 @@ const postList = ref([
                 inputLabel="name"
                 inputValue="code"
                 inputName="status"
-                @update="(val) => console.log(detail)"
+                @update="() => console.log(detail)"
               />
             </div>
           </td>
@@ -93,7 +93,7 @@ const postList = ref([
               inputLabel="name"
               inputValue="code"
               inputName="status"
-              @update="(val) => console.log(detail)"
+              @update="() => console.log(detail)"
             />
           </td>
         </tr>

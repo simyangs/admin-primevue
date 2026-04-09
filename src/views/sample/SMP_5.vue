@@ -11,9 +11,8 @@ const setContent = () => {
 };
 </script>
 <template>
-  <div style="width: 1000px">
-    <CommEditor2 v-model:model-value="content" />
+  <div style="width: 100%; overflow-y: auto">
+    <CommEditor2 v-model:model-value="content" height="600px" />
     <button @click="print">내용</button>
-    <button @click="setContent">입력</button>
   </div>
 </template>
