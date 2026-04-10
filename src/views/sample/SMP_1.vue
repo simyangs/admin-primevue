@@ -122,7 +122,7 @@ const handleCallbackModal3 = () => {
 };
 </script>
 <template>
-  <CommSearchPanel>
+  <CommSearchPanel collapsed>
     <div class="search-item">
       <label>이름</label>
       <div class="search-input-wrap">
