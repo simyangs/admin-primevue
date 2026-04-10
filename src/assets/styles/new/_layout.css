@@ -16,6 +16,16 @@ body {
   flex-direction: column;
 }
 
+.topbar {
+  background-color: #110c08;
+  color: #cbd5e1;
+  border-bottom: 1px solid var(--hv-dark);
+}
+
+.topbar .topbar-title {
+  color: var(--hv-primary) !important;
+}
+
 /* --- 사이드바 스타일 --- */
 .sidebar {
   background-color: var(--hv-dark);

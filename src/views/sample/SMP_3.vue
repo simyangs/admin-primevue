@@ -24,22 +24,24 @@ console.log(props);
   <div>
     <div class="form-section-title">타이틀</div>
     <table class="form-table">
-      <tr>
-        <th>ID</th>
-        <td>{{ id }}</td>
-      </tr>
-      <tr>
-        <th>이름</th>
-        <td>{{ name }}</td>
-      </tr>
-      <tr>
-        <th>카테고리</th>
-        <td>{{ category }}</td>
-      </tr>
-      <tr>
-        <th>수량</th>
-        <td>{{ quantity }}</td>
-      </tr>
+      <tbody>
+        <tr>
+          <th>ID</th>
+          <td>{{ id }}</td>
+        </tr>
+        <tr>
+          <th>이름</th>
+          <td>{{ name }}</td>
+        </tr>
+        <tr>
+          <th>카테고리</th>
+          <td>{{ category }}</td>
+        </tr>
+        <tr>
+          <th>수량</th>
+          <td>{{ quantity }}</td>
+        </tr>
+      </tbody>
     </table>
     <div class="flex justify-end mt-6">
       <div class="flex gap-2">
