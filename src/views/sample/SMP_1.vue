@@ -78,7 +78,7 @@ onMounted(() => {
 });
 
 const columns = [
-  { field: 'id', header: 'ID', visible: true, width: '50px' },
+  { field: 'id', header: 'ID', visible: true, width: '80px' },
   {
     field: 'name',
     header: '이름',
@@ -172,10 +172,6 @@ const handleCallbackModal3 = () => {
     <template #actions>
       <CommButton label="초기화" type="init" @click="console.log('init')" />
       <CommButton label="조회" type="search" @click="console.log('search')" />
-      <CommButton label="처리" type="action" @click="console.log('action')" />
-      <CommButton label="팝업" type="go" @click="console.log('go')" />
-      <CommButton label="엑셀다운" type="excel" @click="console.log('excel')" />
-      <CommButton label="출력" type="print" @click="console.log('print')" />
     </template>
   </CommSearchPanel>
   <section class="data-section">
@@ -195,7 +191,19 @@ const handleCallbackModal3 = () => {
         <span>##{{ slotProps.data.category }}</span>
       </template>
     </CommGrid>
+    <div class="flex justify-between mt-5">
+      <div clas="flex gap-2">
+        <CommButton label="팝업" type="go" @click="console.log('go')" />
+      </div>
+      <div class="flex gap-2">
+        <CommButton label="처리" type="action" @click="console.log('action')" />
+
+        <CommButton label="엑셀다운" type="excel" @click="console.log('excel')" />
+        <CommButton label="출력" type="print" @click="console.log('print')" />
+      </div>
+    </div>
   </section>
+
   <CommModal
     v-if="selectedItem"
     v-model:visible="isOpenModal"

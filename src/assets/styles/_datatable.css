@@ -1,14 +1,11 @@
-.cmm-datatable .p-datatable-header {
-  --p-datatable-header-padding: 0;
-  --p-datatable-header-background: transparent;
-  height: 36px;
+.cmm-datatable {
+  --p-datatable-header-cell-background: #f8fafc;
+  --p-datatable-header-padding: 5px 0;
+  --p-datatable-header-border-width: 0;
 }
 
-.cmm-datatable .cmm-datatable-header {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
+.cmm-datatable .p-datatable-header {
+  background: transparent;
 }
 
 .cmm-datatable .p-multiselect {
@@ -17,7 +14,6 @@
 
 .cmm-datatable .column-filter {
   border: none;
-  padding: 0.5rem 0.5rem;
   color: white;
   cursor: pointer;
   width: auto;
@@ -25,11 +21,23 @@
   transition: background 0.2s;
 }
 
-.cmm-datatable .p-multiselect-dropdown {
-  display: block;
-  font-size: 0.9rem;
+.cmm-datatable .p-datatable-table {
+  border: 1px solid var(--hv-border);
 }
 
+.cmm-datatable .p-datatable-header-cell {
+  color: var(--hv-text-muted);
+  border-right: 1px solid #f1f5f9;
+  font-weight: 700;
+  padding: 10px 16px;
+}
+.cmm-datatable .p-multiselect-dropdown {
+  display: block;
+  font-size: 13px;
+}
+.cmm-datatable .p-multiselect-dropdown .pi {
+  font-size: 13px !important;
+}
 .cmm-datatable .p-multiselect-label-container {
   display: none;
 }

@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import CommEditor2 from '@/components/com/CommEditor2.vue';
+import CommEditor from '@/components/com/CommEditor.vue';
 import { ref } from 'vue';
 
 const content = ref('');
@@ -12,7 +12,7 @@ const setContent = () => {
 </script>
 <template>
   <div style="width: 100%; overflow-y: auto">
-    <CommEditor2 v-model:model-value="content" height="600px" />
+    <CommEditor v-model:model-value="content" height="600px" />
     <button @click="print">내용</button>
   </div>
 </template>

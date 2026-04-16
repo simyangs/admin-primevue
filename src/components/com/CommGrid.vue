@@ -5,6 +5,7 @@ import DataTable, {
   type DataTableRowDoubleClickEvent,
   type DataTableSortEvent,
 } from 'primevue/datatable';
+import { Popover } from 'primevue';
 import MultiSelect from 'primevue/multiselect';
 import Column from 'primevue/column';
 import { formatNumber } from '@/utils/formatter';
@@ -103,8 +104,10 @@ const onToggle = (val: CommTableColumnProps<T>[]) => {
   selectedColumns.value = props.columns.filter((col) => val.some((t) => t.field === col.field));
 };
 
-console.log(props.columns);
-console.log(selectedColumns.value);
+const op = ref();
+const onOpToggle = (event) => {
+  op.value.toggle(event);
+};
 </script>
 <template>
   <div class="cmm-datatable">
@@ -136,10 +139,13 @@ console.log(selectedColumns.value);
       <Column
         v-for="(col, index) of selectedColumns"
         :field="col.field as string"
-        :header="col.header"
         :key="(col.field as string) + index"
         v-bind="columnProps(col.field as string)"
       >
+        <template #header
+          ><span
+            >{{ col.header }} <i class="pi pi-question-circle" @click.stop="onOpToggle" /> </span
+        ></template>
         <template #body="slotProps">
           <div
             @click.stop="col.onCellClick ? col.onCellClick(slotProps.data) : null"
@@ -156,4 +162,7 @@ console.log(selectedColumns.value);
       </Column>
     </DataTable>
   </div>
+  <Popover ref="op">
+    <div>test</div>
+  </Popover>
 </template>
